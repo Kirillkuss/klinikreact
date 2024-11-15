@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Patient</title>
+		<link rel="stylesheet" href="css/color.css">
+    <link rel="stylesheet" href="css/page.css">
+		<script type = "text/javascript" src="script/cardPatient.js"></script>
+    <script type = "text/javascript" src="script/exit.js"></script>
+		<style>	
+          #tableCard th:nth-child(1) { width: 40px; } /* № */
+          #tableCard th:nth-child(2) { width: 150px; } /* Диагноз */
+          #tableCard th:nth-child(3) { width: 30px; } /* Ал. на препараты */
+          #tableCard th:nth-child(4) { width: 150px; } /* Прим. */
+          #tableCard th:nth-child(5) { width: 30px; } /* Закл. */
+          #tableCard th:nth-child(6) { width: 200px; } /* ФИО */
+          #tableCard th:nth-child(7) { width: 60px; } /* тел. */
+          #tableCard th:nth-child(8) { width: 100px; } /* Адрес */
+          #tableCard th:nth-child(9) { width: 100px; } /* № док */
+          #tableCard th:nth-child(10) { width: 100px; } /* снилс */	 
+          #tableCard th:nth-child(11) { width: 100px; } /* полис */	 	       
+		</style>
+    <script>
+      AddCardPatient();
+      switchTable();
+      findByDocumentCard();
+      lazyCard(1,9); 
+    </script>
+	</head>	
+  <body>
+    <h1></h1>
+    <div class="text-bg-success p-3" >
+      <div class="header-container">
+        <h1>Klinika</h1>
+        <div id="timerView" style = "position:relative; left: 900px;">Время окончания сессии:</div>
+        <div id="timer" style = "position:relative; left: 485px;">01:30</div>
+        <a class="btn btn-dark" href="#" onclick="exit()" style = "position:relative; top: 35px;">Выйти</a>
+      </div>
+        <h5><span class="badge bg-secondary">Version 1.0</span></h5>
+        <nav class="navbar" style="background-color: #e3f2fd;">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#"></a>
+              <form class="d-flex" role="search" style = "position:relative; left:0px; top: 0px;">
+                <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск" id="wordParam" required>
+                <button class="btn btn-outline-success"  type="button" id="findByCardPatient" style ="display: flex;align-items: center;justify-content: center;">
+                  <i class="fas fa-search" style="margin-right: 5px;"></i>
+                  Поиск
+                </button>
+              </form>
+            </div>
+        </nav>
+        <h1></h1>
+        <form style = "position:relative; left:0px; top: 0px;">
+            <button type="button" class="btn btn-outline-dark"  data-bs-toggle="modal" data-bs-target="#exampleModal" om>
+              <i class="fas fa-id-card " style="margin-right: 10px;"></i> 
+              Добавить карту пациента
+            </button>
+            <a class="btn btn-outline-dark" id ="swagger">
+              <i class="fas fa-arrow-right" style="margin-right: 5px;"></i>
+              Сваггер
+            </a>
+        </form>
+    </div>
+    <div class="table-container">
+      <!-- Таблица -->
+      <table class="table table-success " id = "tableCard" >
+        <thead class="table-group-divider ">
+          <tr>
+            <th scope="col">№</th>
+            <th scope="col">Диагноз</th>
+            <th scope="col">Ал. на препараты</th>
+            <th scope="col">Прим.</th>
+            <th scope="col">Закл.</th>
+            <th scope="col">ФИО </th>
+            <th scope="col">тел. </th>
+            <th scope="col">Адрес</th>
+            <th scope="col">№ док </th>
+            <th scope="col">СНИЛС </th>
+            <th scope="col">полис </th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        </tbody>
+      </table>
+    </div>
+
+    <!--нижняя часть страницы-->
+	  <div id = "fixedDiv" class="text-bg-success p-4">
+      <!-- Нумерация страниц-->
+      <nav aria-label="Page navigation ">
+          <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="btn btn-outline-dark" href="#" id="PreviousCard">
+              <i class="fas fa-chevron-left"></i>  
+              </a>
+            </li>
+            <li class="page-item"><a class="btn btn-outline-dark" href="#" id="FirstCard">1</a></li>
+            <li class="page-item"><a class="btn btn-outline-dark" href="#" id="SecondCard">2</a></li>
+            <li class="page-item"><a class="btn btn-outline-dark" href="#" id="ThirdCard">3</a></li>
+            <li class="page-item"><a class="btn btn-outline-dark" href="#" id="NextCard">
+              <i class="fas fa-chevron-right"></i> 
+              </a>
+            </li>
+            <li class="page-item"><a class="btn btn-outline-dark" href="#" id="LastCard">
+              <i class="fas fa-step-forward"></i>
+              </a>
+            </li>
+            <div id="pageNumberDisplay" class="text-bg-success p-2" style="position:fixed; left:1800px; top: 880px;">
+              № стр.: <strong id="currentPage">1</strong>
+            </div>
+          </ul>
+        </nav>
+    </div>
+
+    <form id="FormCard">
+        <!-- Модальное окно -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title fs-6" id="exampleModalLabel">ДОБАВИТЬ КАРТУ ПАЦИЕНТА</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+              </div>
+              <div class="modal-body">
+
+                    <label for="patient-surname" class="col-form-label">Диагноз:</label>
+                    <input type="text" class="form-control" id="diagnosis" placeholder = "Диагноз" required>
+
+                    <label for="patient-name" class="col-form-label">Ал. на препараты:</label>
+                    <select class="form-control" id="allergy" required>
+                      <option value="" disabled selected>Да</option>
+                      <option value="True">Да</option>
+                      <option value="False">Нет</option>
+                    </select>
+
+                    <label for="patient-fullName" class="col-form-label">Примечание:</label>
+                    <input type="text" class="form-control" id="note" placeholder = "Примечание" required>
+
+                    <label for="patient-gender" class="col-form-label">Заключение:</label>
+                    <input type="text" class="form-control" id="сonclusion" placeholder = "Заключение" required>
+
+                    <label for="patient-phone" class="col-form-label">Пациент:</label>
+                    <input type="text" class="form-control" id="idPatient" placeholder = "Пациент" required>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-success"  id = "saveCardPatient">Сохранить изменения</button>
+              </div>
+            </div>
+          </div>
+        </div>	
+    </form>	
+</body>
+</html>

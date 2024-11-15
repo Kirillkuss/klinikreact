@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ru">
+  	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Document</title>
+		<link rel="stylesheet" href="css/color.css">
+		<link rel="stylesheet" href="css/page.css">
+		<script type = "text/javascript" src="script/document.js"></script>
+		<script type = "text/javascript" src="script/exit.js"></script>
+		<script>
+			switchTable();
+			findByWordDocument();
+			AddDocument();
+			lazyDocument( 1, 15 );
+		</script>
+	</head>	
+  <body>
+	<h1></h1>
+	<div class="text-bg-success p-3">
+        <div class="header-container">
+            <h1>Klinika</h1>
+			<div id="timerView" style = "position:relative; left: 900px;">Время окончания сессии:</div>
+            <div id="timer" style = "position:relative; left: 485px;">01:30</div>
+            <a class="btn btn-dark" href="#" onclick="exit()" style = "position:relative; top: 35px;">Выйти</a>
+        </div>
+		<h5><span class="badge bg-secondary">Version 1.0</span></h5>
+		<nav class="navbar" style="background-color: #e3f2fd;">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#"></a>
+				<!-- Поиск -->
+				<form class="d-flex" role="search"  style = "position:relative; left:0px; top: 0px;">
+					
+					<input  class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск" id="wordFound" required>
+					<button class="btn btn-outline-success"  type="button" id="findByWordDocument"  style ="display: flex;align-items: center;justify-content: center;">
+						<i class="fas fa-search" style="margin-right: 5px;"></i>
+						Поиск
+					</button>
+				</form>
+			</div>
+		</nav>
+		<h1></h1>
+		<form style = "position:relative; left:0px; top: 0px;">
+			<button type="button" class="btn btn-outline-dark"  data-bs-toggle="modal" data-bs-target="#exampleModal" om>
+				<i class="fas fa-file-alt" style="margin-right: 10px;"></i>
+				Добавить документ
+			</button>
+			<a class="btn btn-outline-dark" id ="swagger">
+				<i class="fas fa-arrow-right" style="margin-right: 5px;"></i>
+				Сваггер
+			</a>
+		</form>
+	</div>
+    <div class="table-container">
+		<!-- Таблица -->
+		<table class="table table-success " id = "tableDocument">
+			<thead class="table-group-divider ">
+				<tr>
+					<th scope="col" >№</th>
+					<th scope="col">Тип документа</th>
+					<th scope="col">Серия</th>
+					<th scope="col">Номер</th>
+					<th scope="col">СНИЛС</th>
+					<th scope="col">Полис</th>
+				</tr>
+			</thead>
+			<tbody class="table-group-divider">
+			</tbody>
+		</table>
+	</div>
+
+	<!--нижняя часть страницы-->
+	<div id = "fixedDiv" class="text-bg-success p-4">
+		<!-- Нумерация страниц-->
+		<nav aria-label="Page navigation ">
+			<ul class="pagination justify-content-center">
+				<li class="page-item"><a class="btn btn-outline-dark" href="#" id="Previous">
+					<i class="fas fa-chevron-left"></i> 
+					</a>
+				</li>
+				<li class="page-item"><a class="btn btn-outline-dark" href="#" id="first">1</a></li>
+				<li class="page-item"><a class="btn btn-outline-dark" href="#" id="second">2</a></li>
+				<li class="page-item"><a class="btn btn-outline-dark" href="#" id="third">3</a></li>
+				<li class="page-item"><a class="btn btn-outline-dark" href="#" id="Next">
+					<i class="fas fa-chevron-right"></i> 
+					</a>
+				</li>
+				<li class="page-item"><a class="btn btn-outline-dark" href="#" id="last">
+					<i class="fas fa-step-forward"></i>
+					</a>
+				</li>
+				<div id="pageNumberDisplay" class="text-bg-success p-2" style="position:fixed; left:1800px; top: 880px;">
+					
+					№ стр.: <strong id="currentPage">1</strong>
+				</div>
+			</ul>
+
+		</nav>
+	</div>
+
+	<form id="testFormDocument">
+		<!-- Модальное окно -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title fs-6" id="exampleModalLabel">ДОБАВИТЬ ДОКУМЕНТ</h3>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+				</div>
+				<div class="modal-body">
+					<label for="document-type" class="col-form-label">Тип документа:</label>
+					<select class="form-control" id="typeDocument" required>
+						<option value="" disabled selected>Тип документа</option>
+						<option value="Паспорт">Паспорт</option>
+						<option value="Водительское уд.">Водительское уд.</option>
+						<option value="Свид. о рождении">Свид. о рождении</option>
+					</select>
+					<label for="document-seria" class="col-form-label">Серия:</label>
+					<input type="text" class="form-control" id="seria" placeholder = "Серия" required>
+					<label for="document-numar" class="col-form-label">Номер:</label>
+					<input type="text" class="form-control" id="numar" placeholder = "Номер" required>
+					<label for="document-snils" class="col-form-label">СНИЛС:</label>
+					<input type="text" class="form-control" id="snils" placeholder = "СНИЛС" required>
+					<label for="document-polis" class="col-form-label">Полис:</label>
+					<input type="text" class="form-control" id="polis" placeholder = "Полис" required>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+					<button type="submit" class="btn btn-success"  id = "saveDocument">Сохранить изменения</button>
+				</div>
+			</div>
+		</div>
+		</div>	
+	</form>	
+</body>
+</html>

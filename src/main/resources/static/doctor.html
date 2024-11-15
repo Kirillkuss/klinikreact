@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ru">
+  	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Document</title>
+		<link rel="stylesheet" href="css/color.css">
+		<link rel="stylesheet" href="css/page.css">
+		<script type = "text/javascript" src="script/doctor.js"></script>
+		<script type = "text/javascript" src="script/exit.js"></script>
+		<script>
+			switchTable();
+			findByWordDoctor();
+			lazyDoctors( 1, 15 );
+			AddDoctor();
+		</script>
+	</head>	
+  <body>
+	<h1></h1>
+	<div class="text-bg-success p-3" id = "divMainDoc">
+        <div class="header-container">
+            <h1>Klinika</h1>
+			<div id="timerView" style = "position:relative; left: 900px;">Время окончания сессии:</div>
+			<div id="timer" style = "position:relative; left: 485px;">01:30</div>
+            <a class="btn btn-dark" href="#" onclick="exit()" style = "position:relative; top: 35px;">Выйти</a>
+			
+        </div>
+		<h5><span class="badge bg-secondary">Version 1.0</span></h5>
+		<nav class="navbar" style="background-color: #e3f2fd;">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#"></a>
+				<!-- Поиск -->
+				<form class="d-flex" role="search"  style = "position:relative; left:0px; top: 0px;">
+					<input  class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск" id="wordFound" required >
+					<button class="btn btn-outline-success"  type="button" id="findByWordDoctor" style ="display: flex;align-items: center;justify-content: center;">
+						<i class="fas fa-search" style="margin-right: 5px;"></i>
+						Поиск
+					</button>
+				</form>
+			</div>
+		</nav>
+		<h1></h1>
+		<form style = "position:relative; left:0px; top: 0px;">
+			<button type="button" class="btn btn-outline-dark"  data-bs-toggle="modal" data-bs-target="#exampleModal" om>
+				<i class="fas fa-user-md" style="margin-right: 10px;"></i>
+				  Добавить доктора
+			</button>
+			<a class="btn btn-outline-dark" id ="swagger">
+				<i class="fas fa-arrow-right" style="margin-right: 5px;"></i>
+				Сваггер
+			</a>
+		</form>
+	</div>
+	<!--нижняя часть страницы-->
+	<div id = "fixedDiv" class="text-bg-success p-4">
+		<!-- Нумерация страниц-->
+		<nav aria-label="Page navigation ">
+			<ul class="pagination justify-content-center">
+				<li class="page-item"><a class="btn btn-outline-dark" href="#" id="PreviousDoctor">
+					<i class="fas fa-chevron-left"></i> 
+					</a>
+				</li>
+				<li class="page-item"><a class="btn btn-outline-dark" href="#" id="firstDoctor">1</a></li>
+				<li class="page-item"><a class="btn btn-outline-dark" href="#" id="secondDoctor">2</a></li>
+				<li class="page-item"><a class="btn btn-outline-dark" href="#" id="thirdDoctor">3</a></li>
+				<li class="page-item"><a class="btn btn-outline-dark" href="#" id="NextDoctor">
+					<i class="fas fa-chevron-right"></i> 
+					</a>
+				</li>
+				<li class="page-item"><a class="btn btn-outline-dark" href="#" id="lastDoctor">
+					<i class="fas fa-step-forward"></i>
+					</a>
+				</li>
+				<div id="pageNumberDisplay" class="text-bg-success p-2" style="position:fixed; left:1800px; top: 880px;">
+					№ стр.: <strong id="currentPage">1</strong>
+				</div>
+			</ul>
+		</nav>
+	</div>
+	<!-- Таблица -->
+    <div class="table-container">
+        <table class="table table-success " id = "tableDoctor"  >
+            <thead class="table-group-divider ">
+            <tr>
+                <th scope="col" >№</th>
+                <th scope="col">Фамилия</th>
+                <th scope="col">Имя</th>
+                <th scope="col">Отчество</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider">
+            </tbody>
+        </table>
+    </div>
+
+	<form id="testFormDoctor">
+		<!-- Модальное окно -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title fs-6" id="exampleModalLabel">ДОБАВИТЬ ДОКТОРА</h3>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+					</div>
+					<div class="modal-body">
+						<!--label for="document-id" class="col-form-label">ИД:</label>
+						<input type="text" class="form-control" id="idDoctor" placeholder = "Ид доктора"  required!-->
+						<label for="document-type" class="col-form-label">Фамилия:</label>
+						<input type="text" class="form-control" id="surname" placeholder = "Фамилия" required>
+						<label for="document-seria" class="col-form-label">Имя:</label>
+						<input type="text" class="form-control" id="name" placeholder = "Имя" required>
+						<label for="document-numar" class="col-form-label">Отчества:</label>
+						<input type="text" class="form-control" id="fullName" placeholder = "Отчества" required>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+						<button type="submit" class="btn btn-success"  id = "saveDoctor">Сохранить изменения</button>
+					</div>
+				</div>
+			</div>
+		</div>	
+	</form>	
+</body>
+</html>

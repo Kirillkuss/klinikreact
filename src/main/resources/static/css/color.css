@@ -1,0 +1,9 @@
+tbody > tr.highlight > td {
+    background: rgb(221, 167, 19);
+  }
+  
+  body {
+    margin: 0;
+    height: 100%;
+    width: 89.5%;
+  }

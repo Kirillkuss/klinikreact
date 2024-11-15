@@ -1,0 +1,22 @@
+table, th, td, tr {
+    width: 10px; 
+    height:20px; 
+    border: solid 1px green; 
+    text-align: center;	 
+    }
+#fixedDiv{
+            position: fixed;
+            top: 880px;
+            width: 1718px;
+            height: 300px;  
+        }
+.header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; 
+            margin-bottom: 20px;
+}
+.table-container {
+    max-height: 670px; /* Фиксированная высота контейнера */
+    overflow: auto; /* Добавление полос прокрутки при необходимости */
+}	
