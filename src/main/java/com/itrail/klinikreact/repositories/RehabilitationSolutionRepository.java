@@ -7,6 +7,6 @@ import reactor.core.publisher.Mono;
 
 public interface RehabilitationSolutionRepository extends ReactiveCrudRepository<RehabilitationSolution, Long>{ 
 
-    @Query( "SELECT rs FROM RehabilitationSolution rs WHERE rs.name = :name")
+    @Query( "SELECT rs.* FROM rehabilitation_solution rs WHERE rs.name = :name")
     Mono<RehabilitationSolution> findRehabilitationSolutionByName( String name );
 }

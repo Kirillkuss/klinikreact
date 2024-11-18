@@ -12,9 +12,11 @@ import com.itrail.klinikreact.response.CardPatientResponse;
 import com.itrail.klinikreact.rest.models.ICardPatient;
 import com.itrail.klinikreact.services.CardPatientService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class CardPatientController implements ICardPatient {

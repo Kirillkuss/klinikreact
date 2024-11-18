@@ -4,6 +4,8 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -22,6 +24,7 @@ import lombok.ToString;
 public class RehabilitationSolution implements Serializable{
 
     @Id
+    @Hidden
     @Column( name = "id_rehabilitation_solution")
     @Schema( name        = "idRehabilitationSolution",
              description = "ИД реабилитационного лечения",

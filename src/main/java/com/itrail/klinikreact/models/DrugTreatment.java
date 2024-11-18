@@ -4,6 +4,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -19,11 +22,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
+@JsonInclude( Include.NON_NULL )
 public class DrugTreatment implements Serializable {
     
     @Id
-    @Column( name = "id_drug")
-    @Schema( name        = "idDrugTreatment",
+    @Hidden
+    @Column( name = "id_drug_treatment")
+    @Schema( name        = "idDrug",
              description = "ИД медикаментозного лечения",
              example     = "100",
              required    = true )

@@ -1,12 +1,11 @@
 package com.itrail.klinikreact.models;
 
 import java.io.Serializable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -23,10 +22,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
+@JsonInclude( Include.NON_NULL )
 public class Drug implements Serializable{
     
     @Id
-    @Column( name = "id_dr")
+    @Hidden
+    @Column( name = "id_drug")
     @Schema( name        = "idDrug",
              description = "ИД лекарства",
              example     = "100",
@@ -40,8 +41,10 @@ public class Drug implements Serializable{
              required    = true )
     private String name;
 
-    @Hidden
-    @OneToOne( cascade = CascadeType.ALL )
-    @JoinColumn( name = "drug_id", referencedColumnName = "id_drug" )
-    private DrugTreatment drugTreatment ;
+    @Column( name = "drug_treatment_id")
+    @Schema( name        = "drugTreatmentId",
+             description = "Ид мед лечения",
+             example     = "1")
+    private Long drugTreatmentId;
+
 }

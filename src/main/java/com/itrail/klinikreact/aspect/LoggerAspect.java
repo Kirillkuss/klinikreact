@@ -29,12 +29,12 @@ public class LoggerAspect {
         String[] paramNames = methodSignature.getParameterNames();
         StringBuilder logMessage = new StringBuilder();
         logMessage.append("Method name: ").append( methodSignature.getMethod().getName()).append(", ");
-        /**for (int i = 0; i < paramNames.length; i++) {
+        for (int i = 0; i < paramNames.length; i++) {
             logMessage.append(paramNames[i]).append(" = ").append( proceedingJoinPoint.getArgs()[i]);
             if (i < paramNames.length - 1) {
                 logMessage.append(", "); 
             }
-        }*/
+        }
         logMessage.append( " Execution time: " + stopWatch.getTotalTimeMillis() + " ms");
         log.info(logMessage.toString());
         return proceed;

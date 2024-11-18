@@ -42,7 +42,7 @@ public interface IPatient {
     @GetMapping(value = "/lazy/{page}{size}")
     @Operation( description = "ленивая загрузка пациентов", summary = "ленивая загрузка пациентов")
     public Flux<PatientResponse> getLazyLoadPatient( @Parameter( description = "Страница", example = "1" ) int page,
-                                             @Parameter( description = "кол-во", example = "10" ) int size) ;
+                                                     @Parameter( description = "кол-во", example = "10" ) int size) ;
 
     @GetMapping(value = "/count")
     @Operation( description ="Количество пациентов", summary = "Количество пациентов")

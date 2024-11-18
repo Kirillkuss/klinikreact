@@ -45,7 +45,7 @@ public class CardPatientService {
                 );
     }
 
-  /**
+    /**
      * Поиск карты паицента по ФИО или по документу
      * @param param
      * @return Flux CardPatientResponse
@@ -69,7 +69,12 @@ public class CardPatientService {
                     )
             );
     }
-
+    /**
+     * Добавить карту пациента
+     * @param cardPatient - карта
+     * @return Mono CardPatientResponse
+     */
+    @ExecuteTimeLog( operation = "addCardPatient")
     public Mono<CardPatientResponse> addCardPatient( CardPatient cardPatient){
         return cardPatientRepository.findCardPatientByIdPatient( cardPatient.getPatientId() )
                 .flatMap( foundCardPatient -> Mono.error( new IllegalArgumentException( "Карта пациента с таким ИД пациента уже существует")))
@@ -85,7 +90,11 @@ public class CardPatientService {
                             })
                         );
     }
-
+    /**
+     * Добавление поджалобы в карту пациента
+     * @param typeComplaintRequest -входной запрос
+     * @return Mono Void
+     */
     @ExecuteTimeLog(operation = "addTypeComplaintToCardPatient")
     public Mono<Void> addTypeComplaintToCardPatient( TypeComplaintRequest typeComplaintRequest) {
         return check(typeComplaintRequest.getIdCardPatient(), typeComplaintRequest.getIdTypeComplaint())
@@ -110,7 +119,7 @@ public class CardPatientService {
                .sql("INSERT INTO Card_patient_Complaint(card_patient_id, type_complaint_id) VALUES ($1, $2)")
                .bind("$1", idCardPatient)
                .bind("$2", idTypeComplaint)
-               .then()//S.onErrorResume(e -> {return Mono.error( e );});
+               .then()
                .onErrorResume(e -> {
                    if (e instanceof Throwable) {
                        return Mono.empty(); 
