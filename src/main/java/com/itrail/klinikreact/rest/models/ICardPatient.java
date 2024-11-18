@@ -1,19 +1,14 @@
 package com.itrail.klinikreact.rest.models;
 
-import java.util.List;
-
 import javax.ws.rs.core.MediaType;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.itrail.klinikreact.models.CardPatient;
+import com.itrail.klinikreact.request.TypeComplaintRequest;
 import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.response.CardPatientResponse;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -41,11 +36,18 @@ public interface ICardPatient {
     @GetMapping(value = "/lazy/{page}{size}")
     @Operation( description = "Ленивая загрузка", summary = "Ленивая загрузка")
     public Flux<CardPatientResponse> getLazyCardPatient( @Parameter( description = "Страница", example ="1") int page,
-                                                 @Parameter( description = "Размер", example ="10") int size );
+                                                         @Parameter( description = "Размер", example ="10") int size );
 
-     @GetMapping(value = "/{param}")
+    @GetMapping(value = "/{param}")
     @Operation( description = "Поиск карты пациента по документу пациента (СНИЛС, номер документа, ПОЛИС) или ФИО", summary = "Поиск карты пациента по документу пациента")
     public Flux<CardPatientResponse> getFindCardPatientByDocOrFIO( @Parameter( description = "ФИО или Документ пациента", example ="248469703") String param ); 
 
+    @PostMapping( value = "/add")
+    @Operation( description = "Добавить карту пациента", summary = "Добавить карту пациента")
+    public Mono<CardPatientResponse> addCardPatient( @RequestBody CardPatient cardPatient );
+
+    @PostMapping(value = "/type-complaint")
+    @Operation( description = "Добавить под жалобу в карту пациента", summary = "Добавить под жалобу в карту пациента")
+    public Mono<Void> addTypeComplaintToCardPatient(@RequestBody TypeComplaintRequest typeComplaintRequest);
     
 }

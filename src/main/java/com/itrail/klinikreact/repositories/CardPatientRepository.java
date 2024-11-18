@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 
 public interface CardPatientRepository extends ReactiveCrudRepository<CardPatient, Long>{
 
-    @Query("SELECT cp.* FROM Card_patient cp WHERE cp.patient.idPatient = :idPatient")
+    @Query("SELECT cp.* FROM Card_patient cp WHERE cp.patient_id = :idPatient")
     Mono<CardPatient> findCardPatientByIdPatient( Long idPatient );
 
      @Query( "SELECT cp.* FROM Card_patient cp \n" +
@@ -20,10 +20,10 @@ public interface CardPatientRepository extends ReactiveCrudRepository<CardPatien
              "CONCAT( p.surname, ' ',p.name, ' ', p.full_name ) LIKE :param ")
     Flux<CardPatient> findCardPatientByDocOrFIO( String param );
 
-    @Query( "SELECT * Card_patient cp \n " + 
+    @Query( "SELECT * FROM  Card_patient cp \n " + 
             "LEFT JOIN Card_patient_complaint cpc ON cpc.card_patient_id = cp.id_card_patient \n" + 
             "LEFT JOIN type_complaint tp ON tp.id_type_complaint = cpc.type_complaint_id \n" + 
-            "WHERE cp.id_card_patient = ?1 AND tp.id_type_complaint = ?2")
+           "WHERE cp.id_card_patient = :idCardPatient AND tp.id_type_complaint = :idTaypeCompaint")
     Mono<CardPatient> findCardPatientByIdAndIdTypeComplaint(Long idCardPatient, Long idTaypeCompaint );
     
 }

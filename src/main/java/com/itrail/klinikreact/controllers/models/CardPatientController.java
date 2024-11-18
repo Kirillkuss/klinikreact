@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import com.itrail.klinikreact.models.CardPatient;
 import com.itrail.klinikreact.repositories.CardPatientRepository;
+import com.itrail.klinikreact.request.TypeComplaintRequest;
 import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.response.CardPatientResponse;
 import com.itrail.klinikreact.rest.models.ICardPatient;
@@ -49,6 +50,16 @@ public class CardPatientController implements ICardPatient {
     @Override
     public Flux<CardPatientResponse> getFindCardPatientByDocOrFIO(String param) {
         return cardPatientService.findCardPatientByDocOrFIO( param );
+    }
+
+    @Override
+    public Mono<CardPatientResponse> addCardPatient(CardPatient cardPatient) {
+        return cardPatientService.addCardPatient( cardPatient );
+    }
+
+    @Override
+    public Mono<Void> addTypeComplaintToCardPatient( TypeComplaintRequest typeComplaintRequest ) {
+        return cardPatientService.addTypeComplaintToCardPatient( typeComplaintRequest );
     }
 
 
