@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.itrail.klinikreact.models.Doctor;
 import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.rest.models.IDoctor;
-import com.itrail.klinikreact.services.DoctorService;
+import com.itrail.klinikreact.services.model.DoctorService;
+
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

@@ -9,8 +9,9 @@ import com.itrail.klinikreact.repositories.DrugTreatmentRepository;
 import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.response.DrugResponse;
 import com.itrail.klinikreact.rest.models.IDrugTreatment;
-import com.itrail.klinikreact.services.DrugService;
-import com.itrail.klinikreact.services.DrugTreatmentService;
+import com.itrail.klinikreact.services.model.DrugService;
+import com.itrail.klinikreact.services.model.DrugTreatmentService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;

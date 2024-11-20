@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="remove_column_from_user_test" author="Barysevich">
+        <!--Удаление поля -->
+        <dropColumn columnName="email" tableName="user_test"/>
+        <!--Откат поля поля -->
+        <rollback>
+            <addColumn tableName="user_test">
+                <column name="email" type="varchar(30)"/>
+            </addColumn>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

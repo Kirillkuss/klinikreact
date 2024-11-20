@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <!-- Add relationship / Связь с таблицы доктор и отдел -->
+    <changeSet id="addForeignKeyConstraint" author="Barysevich">
+        <addForeignKeyConstraint baseColumnNames="department_id"
+                                 baseTableName="doctor_liquibase"
+                                 constraintName="fk_barysevich_id"
+                                 referencedColumnNames="id_department"
+                                 referencedTableName="department_liquibase"/>
+    </changeSet>
+
+</databaseChangeLog>

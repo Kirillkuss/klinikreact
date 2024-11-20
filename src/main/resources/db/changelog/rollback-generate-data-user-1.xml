@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="insert_into_table_user_test" author="Barysevich">
+        <!--Генерация данных -->
+        <insert tableName="user_test">
+            <column name = "login_user" value = "admin"/>
+            <column name = "password_user" value = "jhyufsf"/>
+            <column name = "email" value = "Mihailovich3@gmail.com"/>
+            <column name = "fio" value = "Пупкин Михаил Федорович"/>
+        </insert>
+        <insert tableName="user_test">
+            <column name = "login_user" value = "user"/>
+            <column name = "password_user" value = "5687dgw46hd"/>
+            <column name = "email" value = "Pupkin3@gmail.com"/>
+            <column name = "fio" value = "Чуткин Андрей Николаевич"/>
+        </insert>
+        <insert tableName="user_test">
+            <column name = "login_user" value = "test"/>
+            <column name = "password_user" value = "dfgdfhh56gn"/>
+            <column name = "email" value = "SuperPuper@gmail.com"/>
+            <column name = "fio" value = "Федоров Сергей Михайловчи"/>
+        </insert>
+        <!--Откат данных -->
+         <rollback>
+            <delete tableName="user_test">
+                <where>login_user='test'</where>
+            </delete>
+            <delete tableName="user_test">
+                <where>login_user='user'</where>
+            </delete>
+            <delete tableName="user_test">
+                <where>login_user='admin'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

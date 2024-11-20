@@ -18,11 +18,11 @@ import lombok.ToString;
 @ToString
 public class RecordPatientRequest {
     
-    @Schema( name        = "idCardPatient",
-             description = "ид карты пациента",
+    @Schema( name        = "id",
+             description = "ид",
              example     = "1",
              required    = true )
-    private Long idCardPatient;
+    private Long id;
     @Schema( name        = "from",
              description = "дата и время с какого",
              example     = "2021-01-24T14:02:35.584",

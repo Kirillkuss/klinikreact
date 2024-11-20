@@ -9,7 +9,8 @@ import com.itrail.klinikreact.request.RecordPatientRequest;
 import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.response.RecordPatientResponse;
 import com.itrail.klinikreact.rest.models.IRecordPatient;
-import com.itrail.klinikreact.services.RecordPatientService;
+import com.itrail.klinikreact.services.model.RecordPatientService;
+
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -49,7 +50,7 @@ public class RecordPatientController implements IRecordPatient {
     @Override
     public Flux<RecordPatientResponse> getRecordPatientByParam(RecordPatientRequest recordPatientRequest) {
         System.out.println(recordPatientRequest );
-        return recordPatientService.getRecordPatientByParam( recordPatientRequest.getIdCardPatient(),
+        return recordPatientService.getRecordPatientByParam( recordPatientRequest.getId(),
                                                              recordPatientRequest.getFrom(),
                                                              recordPatientRequest.getTo());
     }

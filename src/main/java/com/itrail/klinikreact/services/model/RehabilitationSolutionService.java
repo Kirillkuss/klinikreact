@@ -1,8 +1,7 @@
-package com.itrail.klinikreact.services;
+package com.itrail.klinikreact.services.model;
 
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
-
 import com.itrail.klinikreact.aspect.ExecuteTimeLog;
 import com.itrail.klinikreact.models.RehabilitationSolution;
 import com.itrail.klinikreact.repositories.RehabilitationSolutionRepository;

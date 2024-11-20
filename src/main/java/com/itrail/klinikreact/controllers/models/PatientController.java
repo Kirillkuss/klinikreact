@@ -9,7 +9,8 @@ import com.itrail.klinikreact.request.PatientRequest;
 import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.response.PatientResponse;
 import com.itrail.klinikreact.rest.models.IPatient;
-import com.itrail.klinikreact.services.PatientService;
+import com.itrail.klinikreact.services.model.PatientService;
+
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

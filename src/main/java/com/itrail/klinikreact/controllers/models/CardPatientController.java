@@ -10,7 +10,8 @@ import com.itrail.klinikreact.request.TypeComplaintRequest;
 import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.response.CardPatientResponse;
 import com.itrail.klinikreact.rest.models.ICardPatient;
-import com.itrail.klinikreact.services.CardPatientService;
+import com.itrail.klinikreact.services.model.CardPatientService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;

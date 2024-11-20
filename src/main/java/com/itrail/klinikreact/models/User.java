@@ -25,10 +25,10 @@ public class User {
     @Id
     @Hidden
     @Column( name = "id")
-    @Schema( name        = "idUser",
+    @Schema( name        = "id",
              description = "Ид пользователя",
              example     = "100" )
-    private Long idUser;
+    private Long id;
 
     @Column( name = "login")
     @Schema( name        = "login",
@@ -49,7 +49,7 @@ public class User {
     @Column( name = "role")
     @Schema( name        = "role",
             description = "роль" )
-    private Role role;
+    private String role;
 
     
     @Column( name = "email")
@@ -74,5 +74,5 @@ public class User {
              example     = "false",
              required    = true )
     private Boolean status;
-    
+
 }

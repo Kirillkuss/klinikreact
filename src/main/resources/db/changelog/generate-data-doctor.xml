@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <!-- Insert data Table in DataBase / Добавление записей в табл доктор-->
+    <changeSet id="insert_into_table_doctor_liquibase" author="Barysevich">
+        <insert tableName="doctor_liquibase">
+            <column name = "surname" value = "Budko"/>
+            <column name = "name" value = "Fedor"/>
+            <column name = "full_name" value = "Mihailovich"/>
+            <column name = "department_id" value = "2"/>
+        </insert>
+        <insert tableName="doctor_liquibase">
+            <column name = "surname" value = "Bondar"/>
+            <column name = "name" value = "Dmitry"/>
+            <column name = "full_name" value = "Alexndrovich"/>
+            <column name = "department_id" value = "4"/>
+        </insert>
+
+        <insert tableName="doctor_liquibase">
+            <column name = "surname" value = "Petrov"/>
+            <column name = "name" value = "Petr"/>
+            <column name = "full_name" value = "Vacheslavovich"/>
+            <column name = "department_id" value = "1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.itrail.klinikreact.models.RehabilitationSolution;
 import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.rest.models.IRehabilitationSolution;
-import com.itrail.klinikreact.services.RehabilitationSolutionService;
+import com.itrail.klinikreact.services.model.RehabilitationSolutionService;
+
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

@@ -1,9 +1,7 @@
-package com.itrail.klinikreact.services;
+package com.itrail.klinikreact.services.model;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
-
 import com.itrail.klinikreact.aspect.ExecuteTimeLog;
 import com.itrail.klinikreact.models.Drug;
 import com.itrail.klinikreact.repositories.DrugRepository;

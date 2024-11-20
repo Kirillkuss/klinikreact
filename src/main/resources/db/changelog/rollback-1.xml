@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+<changeSet id="rollback_create_table_and_drop_table_from_rollback" author="Barysevich">
+    <!--Создаение таблицы -->
+    <createTable tableName="user_test"> 
+        <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+        </column>
+        <column name="login_user" type="varchar(36)"/>
+        <column name="password_user" type="varchar(100)"/>
+        <column name="email" type="varchar(30)"/>
+        <column name="fio" type="varchar(100)"/>
+    </createTable>
+    <!--Откат таблицы -->
+    <rollback>
+        <dropTable tableName="user_test"/>
+    </rollback>
+</changeSet>
+</databaseChangeLog>

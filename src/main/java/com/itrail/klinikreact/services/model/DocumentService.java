@@ -1,4 +1,4 @@
-package com.itrail.klinikreact.services;
+package com.itrail.klinikreact.services.model;
 
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <!-- Включение списка чейнджсетах -->
+    <!--include file = "create-schema-database.xml" relativeToChangelogFile = "true"/!-->
+    <include file = "create-table-doctor.xml" relativeToChangelogFile = "true"/>
+    <include file = "create-table-department.xml" relativeToChangelogFile = "true"/>
+    <include file = "changeset-department-table.xml" relativeToChangelogFile = "true"/>
+    <include file = "generate-data-department.xml" relativeToChangelogFile = "true"/>
+    <include file = "generate-data-doctor.xml" relativeToChangelogFile = "true"/>
+    <include file = "changeset-doctor-table.xml" relativeToChangelogFile = "true"/>
+    <include file = "delete-doctor.xml" relativeToChangelogFile = "true"/>
+    <include file = "rollback-1.xml" relativeToChangelogFile = "true"/>
+    <include file = "rollback-generate-data-user-1.xml" relativeToChangelogFile = "true"/>
+    <include file = "rollback-2.xml" relativeToChangelogFile = "true"/>
+    <include file = "rollback-generate-data-user-2.xml" relativeToChangelogFile = "true"/>
+    <include file = "rollback-3.xml" relativeToChangelogFile = "true"/>
+</databaseChangeLog>

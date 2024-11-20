@@ -1,4 +1,4 @@
-package com.itrail.klinikreact.services;
+package com.itrail.klinikreact.services.model;
 
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;
@@ -18,31 +18,16 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class CardPatientService {
     
-    private final CardPatientRepository cardPatientRepository;
+    private final CardPatientRepository   cardPatientRepository;
     private final TypeComplaintRepository typeComplaintRepository;
-    private final PatientService patientService;
-    private final R2dbcEntityTemplate r2dbcEntityTemplate;
+    private final PatientService          patientService;
+    private final R2dbcEntityTemplate     r2dbcEntityTemplate;
 
     @ExecuteTimeLog( operation = "getLazyCardPatient")
     public Flux<CardPatientResponse> getLazyCardPatient(int page, int size) {
-        return cardPatientRepository.findAll()
+        return getFluxCardPatientResponse( cardPatientRepository.findAll()
                 .skip((page - 1) * size)
-                .take(size)
-                .flatMap(cardPatient -> 
-                    patientService.getFindPatientById(cardPatient.getPatientId())
-                        .flatMap(patient -> 
-                            typeComplaintRepository.findTypeComplaintByIdCardPatient(cardPatient.getIdCardPatient())
-                                .collectList()
-                                .map(typeComplaints -> { 
-                                    cardPatient.setPatientId( null ); 
-                                    CardPatientResponse cardPatientResponse = new CardPatientResponse();
-                                    cardPatientResponse.setCardPatient(cardPatient);
-                                    cardPatientResponse.setPatient(patient);
-                                    cardPatientResponse.setTypeComplaints(typeComplaints); 
-                                    return cardPatientResponse; 
-                                })  
-                        )
-                );
+                .take(size));
     }
 
     /**
@@ -52,23 +37,44 @@ public class CardPatientService {
      */
     @ExecuteTimeLog( operation = "findCardPatientByDocOrFIO")
     public Flux <CardPatientResponse> findCardPatientByDocOrFIO( String param ){
-        return cardPatientRepository.findCardPatientByDocOrFIO( "%" + param + "%" )
-            .flatMap(cardPatient -> 
+        return getFluxCardPatientResponse( cardPatientRepository.findCardPatientByDocOrFIO( "%" + param + "%" ));
+    }
+
+    /**
+     * Получение Flux<CardPatientResponse> 
+     * @param fluxCardPatient - входной поток
+     * @return Flux CardPatientResponse 
+     */
+    private Flux<CardPatientResponse> getFluxCardPatientResponse( Flux<CardPatient> fluxCardPatient ){
+        return fluxCardPatient.flatMap( cardPatient -> 
             patientService.getFindPatientById(cardPatient.getPatientId())
                 .flatMap(patient -> 
                     typeComplaintRepository.findTypeComplaintByIdCardPatient(cardPatient.getIdCardPatient())
                         .collectList()
-                        .map(typeComplaints -> {
+                        .map(typeComplaints -> { 
                             cardPatient.setPatientId( null ); 
-                            CardPatientResponse cardPatientResponse = new CardPatientResponse();
-                            cardPatientResponse.setCardPatient(cardPatient);
-                            cardPatientResponse.setPatient(patient);
-                            cardPatientResponse.setTypeComplaints(typeComplaints); 
-                            return cardPatientResponse; 
-                         })
+                            return new CardPatientResponse( cardPatient,typeComplaints, patient ); 
+                        })  
+                )
+        );
+    }
+
+    public Mono<CardPatientResponse> findCardPatientById( Long idCardPatient ){
+        return cardPatientRepository.findById( idCardPatient )
+            .flatMap( cardPatient -> 
+                patientService.getFindPatientById(cardPatient.getPatientId())
+                    .flatMap(patient -> 
+                        typeComplaintRepository.findTypeComplaintByIdCardPatient(cardPatient.getIdCardPatient())
+                            .collectList()
+                            .map(typeComplaints -> { 
+                                cardPatient.setPatientId( null ); 
+                                return new CardPatientResponse( cardPatient,typeComplaints, patient ); 
+                            })  
                     )
             );
     }
+
+
     /**
      * Добавить карту пациента
      * @param cardPatient - карта

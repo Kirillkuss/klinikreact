@@ -1,4 +1,4 @@
-package com.itrail.klinikreact.services;
+package com.itrail.klinikreact.services.model;
 
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
@@ -21,31 +21,28 @@ public class RecordPatientService {
     private final CardPatientRepository cardPatientRepository;
 
     public Flux<RecordPatientResponse> getLazyRecordPatient( int page, int size ){
-        return recordPatientRepository.findAll()
-            .skip((page - 1) * size)
-            .take(size)
-            .flatMap( foundLazyRecordPatient ->{ 
-                return doctorRepository.findById( foundLazyRecordPatient.getDoctorId() ).map( doctorFound ->{
-                    RecordPatientResponse recordPatientResponse = new RecordPatientResponse();
-                                          foundLazyRecordPatient.setDoctorId( null );
-                                          recordPatientResponse.setRecordPatient( foundLazyRecordPatient );
-                                          recordPatientResponse.setDoctor( doctorFound );
-                    return recordPatientResponse;
-                });
-            });
+        return getFluxRecordPatientResponse( recordPatientRepository.findAll().skip((page - 1) * size).take(size));
     }
 
     public Flux<RecordPatientResponse> getRecordPatientByParam( Long idCardPatient, LocalDateTime from, LocalDateTime to ){
-        return recordPatientRepository.findByParam( idCardPatient, from, to )
-            .flatMap( foundRecordPatient -> {
-                return doctorRepository.findById( foundRecordPatient.getDoctorId() ).map( doctor ->{
-                    RecordPatientResponse recordPatientResponse = new RecordPatientResponse();
-                                          foundRecordPatient.setDoctorId( null );
-                                          recordPatientResponse.setRecordPatient( foundRecordPatient );
-                                          recordPatientResponse.setDoctor( doctor );
-                    return recordPatientResponse;
-                });
-            }).switchIfEmpty( Mono.error( new NoSuchElementException( "По данному запросу ничего не найдено!")));
+        return getFluxRecordPatientResponse( recordPatientRepository.findByParamByCardPatient( idCardPatient, from, to ))
+            .switchIfEmpty( Mono.error( new NoSuchElementException( "По данному запросу ничего не найдено!")));
+    }
+
+    public Flux<RecordPatientResponse> getRecordPatientByParamAndIdPatient( Long idPatient, LocalDateTime from, LocalDateTime to ){
+        return getFluxRecordPatientResponse( recordPatientRepository.findByParamByPatient( idPatient, from, to ));
+    }
+
+    private Flux<RecordPatientResponse> getFluxRecordPatientResponse( Flux<RecordPatient> fluxRecordPatient ){
+        return fluxRecordPatient.flatMap( foundRecordPatient -> {
+            return doctorRepository.findById( foundRecordPatient.getDoctorId() ).map( doctor ->{
+                RecordPatientResponse recordPatientResponse = new RecordPatientResponse();
+                                      foundRecordPatient.setDoctorId( null );
+                                      recordPatientResponse.setRecordPatient( foundRecordPatient );
+                                      recordPatientResponse.setDoctor( doctor );
+                return recordPatientResponse;
+            });
+        });
     }
 
     public Mono<RecordPatientResponse> addRecordPatient( RecordPatient recordPatient ){

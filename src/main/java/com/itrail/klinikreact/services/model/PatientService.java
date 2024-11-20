@@ -1,8 +1,9 @@
-package com.itrail.klinikreact.services;
+package com.itrail.klinikreact.services.model;
 
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import com.itrail.klinikreact.aspect.ExecuteTimeLog;
+import com.itrail.klinikreact.models.Patient;
 import com.itrail.klinikreact.repositories.DocumentRepository;
 import com.itrail.klinikreact.repositories.PatientRepository;
 import com.itrail.klinikreact.request.PatientRequest;
@@ -68,21 +69,8 @@ public class PatientService {
      */
     @ExecuteTimeLog(operation = "findPatientByFioAndPhone")
     public Flux<PatientResponse> findPatientByFioAndPhone( String word ){
-        return  patientRepository.findPatientByFioAndPhone( "%" + word + "%" )
-            .flatMap( patient -> {
-                return documentRepository.findById( patient.getDocumentId() ).map( document -> {
-                    PatientResponse patientResponse = new PatientResponse();
-                                    patientResponse.setIdPatient( patient.getIdPatient() );
-                                    patientResponse.setSurname( patient.getSurname() );
-                                    patientResponse.setName( patient.getName() );
-                                    patientResponse.setFullName( patient.getFullName() );
-                                    patientResponse.setGender( patient.getGender() );
-                                    patientResponse.setPhone( patient.getPhone() );
-                                    patientResponse.setAddress( patient.getAddress() );
-                                    patientResponse.setDocument( document );
-                    return patientResponse;
-                });
-            }).switchIfEmpty( Flux.error( new NoSuchElementException( "По данному запросу ничего не найдено")) );                 
+        return getFluxPatientResponse( patientRepository.findPatientByFioAndPhone( "%" + word + "%" ))
+            .switchIfEmpty( Flux.error( new NoSuchElementException( "По данному запросу ничего не найдено")) );                 
     }
     /**
      * Ленивания загрузка
@@ -92,27 +80,27 @@ public class PatientService {
      */
     @ExecuteTimeLog(operation = "getLazyLoadPatient")
     public Flux<PatientResponse> getLazyLoadPatient( int page, int size ) {
-        return patientRepository.findAll()
-                .skip((page - 1) * size)
-                .take(size)
-                .flatMap(patient -> {
-                    return documentRepository.findById(patient.getDocumentId())  
-                            .map(document -> {
-                                PatientResponse patientResponse = new PatientResponse();
-                                                patientResponse.setIdPatient( patient.getIdPatient() );
-                                                patientResponse.setSurname( patient.getSurname() );
-                                                patientResponse.setName( patient.getName() );
-                                                patientResponse.setFullName( patient.getFullName() );
-                                                patientResponse.setGender( patient.getGender() );
-                                                patientResponse.setPhone( patient.getPhone() );
-                                                patientResponse.setAddress( patient.getAddress() );
-                                                patientResponse.setDocument( document );
-                                return patientResponse;
-                            });
-                });
+        return getFluxPatientResponse( patientRepository.findAll().skip((page - 1) * size).take(size));
     }
 
-    //@ExecuteTimeLog(operation = "getFindPatientById")
+    private Flux<PatientResponse> getFluxPatientResponse( Flux<Patient> fluxPatient ){
+        return fluxPatient.flatMap(patient -> {
+            return documentRepository.findById(patient.getDocumentId())  
+                    .map(document -> {
+                        PatientResponse patientResponse = new PatientResponse();
+                                        patientResponse.setIdPatient( patient.getIdPatient() );
+                                        patientResponse.setSurname( patient.getSurname() );
+                                        patientResponse.setName( patient.getName() );
+                                        patientResponse.setFullName( patient.getFullName() );
+                                        patientResponse.setGender( patient.getGender() );
+                                        patientResponse.setPhone( patient.getPhone() );
+                                        patientResponse.setAddress( patient.getAddress() );
+                                        patientResponse.setDocument( document );
+                        return patientResponse;
+                    });
+        });
+    }
+    
     public Mono<PatientResponse> getFindPatientById( Long idPatient ){
         return patientRepository.findById( idPatient ).flatMap( patient -> {
             return documentRepository.findById( patient.getDocumentId() ).map( document ->{
