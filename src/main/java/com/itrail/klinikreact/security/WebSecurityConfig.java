@@ -22,30 +22,28 @@ public class WebSecurityConfig {
 
     //"/login", "/change-password"
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        return http.exceptionHandling(handling -> handling
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                .accessDeniedHandler((swe, e) -> 
-                    Mono.fromRunnable(() -> swe.getResponse()
-                            .setStatusCode(HttpStatus.FORBIDDEN)))
-            )
-            .csrf(csrf -> csrf.disable())
-            .formLogin(login -> login.disable())
-            .httpBasic(basic -> basic.disable())
-            .authenticationManager(authenticationManager)
-            .securityContextRepository(securityContextRepository)
-            .authorizeExchange(exchange -> exchange
-                .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                .pathMatchers("/login", "/change-password", "/**").permitAll() 
-                .pathMatchers("/auth/", "/swagger-ui-custom.html", 
-                              "/swagger-ui.html", "/swagger-ui/", 
-                              "/v3/api-docs/", "/webjars/", 
-                              "/swagger-ui/index.html", 
-                              "/api-docs/", "/api/", "/").permitAll()
-                .pathMatchers("/swagger/login").permitAll()
-                .anyExchange().authenticated()
-            )
-            .build();
+    public SecurityWebFilterChain securitygWebFilterChain(ServerHttpSecurity http) {
+        return http.exceptionHandling( handling -> handling
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                        .accessDeniedHandler(( swe, e ) -> Mono.fromRunnable(() -> swe.getResponse().setStatusCode( HttpStatus.FORBIDDEN ))))
+                        .csrf( csrf -> csrf.disable()
+                                .formLogin( login -> login
+                                        .disable()
+                                        .httpBasic( basic -> basic
+                                        .disable()
+                                        .authenticationManager( authenticationManager )
+                                        .securityContextRepository( securityContextRepository )
+                                        .authorizeExchange( exchange -> exchange
+                                                .pathMatchers( HttpMethod.OPTIONS )
+                                                .permitAll()
+                                                .pathMatchers("/auth/**", "/swagger-ui-custom.html", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**",
+                                                                "/swagger-ui/index.html", "/api-docs/**", "/api/**", "/")
+                                                .permitAll()
+                                                .pathMatchers("/swagger/token", "/klinikreact", "/documents/**", "/", "/login", "/index.html", "/users")
+                                                .permitAll()
+                                                .anyExchange()
+                                                .authenticated()))))
+                                                .build();
     }
 
     @Bean

@@ -48,6 +48,7 @@ public class User {
 
     @Column( name = "role")
     @Schema( name        = "role",
+            example     = "1",
             description = "роль" )
     private String role;
 

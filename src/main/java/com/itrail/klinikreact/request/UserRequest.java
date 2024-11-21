@@ -38,7 +38,7 @@ public class UserRequest {
     @Column( name = "role")
     @Schema( name        = "role",
              description = "роль",
-             example     = "ADMIN",
+             example     = "1",
              required    = true )
     private String role;
 

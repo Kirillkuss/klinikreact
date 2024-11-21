@@ -29,7 +29,7 @@ public class UserResponse {
              description = "Роль",
              example     = "ADMIN",
              required    = true )
-    private Role role;
+    private String role;
     @Schema( name        = "statusBlock",
              description = "Статус блокировки",
              example     = "false",

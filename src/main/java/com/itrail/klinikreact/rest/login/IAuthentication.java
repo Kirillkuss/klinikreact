@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 })
 public interface IAuthentication {
 
-    @GetMapping(value = "login")
+    @GetMapping(value = "/login")
     public Mono<String> login();
 
-    @GetMapping(value = "index")
+    @GetMapping(value = "/index")
     public Mono<String> index();
 
-    @GetMapping(value = "change-password")
+    @GetMapping(value = "/change-password")
     public Mono<String> changePassword();
 
    /**  @PostMapping(value = "change-password")

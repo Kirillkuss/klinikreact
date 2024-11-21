@@ -1,15 +1,25 @@
 package com.itrail.klinikreact.services.model;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.itrail.klinikreact.aspect.ExecuteTimeLog;
 import com.itrail.klinikreact.models.User;
 import com.itrail.klinikreact.repositories.UserRepository;
+import com.itrail.klinikreact.request.UserRequest;
+import com.itrail.klinikreact.response.UserResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -26,16 +36,24 @@ public class UserService {
     @PostConstruct
     protected void init(){
         String salt = generateSalt();
-        /**User user = new User();
+        User user = new User();
                                 user.setLogin("testone");
-                                user.setPassword(passwordEncoder.encode( secret + "testone" + salt ));
-                                user.setRole( "1");
-                                user.setEmail( "Admintttt@mail.com");
+                               // user.setPassword(passwordEncoder.encode( secret + "dkjfRk4$451sfdf" + salt ));
+                                user.setPassword("dkjfRk4$451sfdf");
+                                user.setRole("1");
+                                user.setEmail( "Admin@mail.com");
                                 user.setSalt( salt );
                                 user.setStatus( false );
-            userRepository.save(  user ).subscribe( r -> log.info( r.toString() ));*/
-            userRepository.findById(33L ).subscribe( us -> log.info( us.toString()));
-            log.info( "init main user");
+            //ddUserThree(  user ).subscribe( r -> log.info( r.toString() ));
+            //userRepository.findById(33L ).subscribe( us -> log.info( us.toString()));
+            //log.info( "init main user");
+    }
+
+    public Flux<UserResponse> getUsers() {
+        return userRepository.findAll()
+            .map(user -> {
+                return new UserResponse(user.getLogin(), user.getEmail(), user.getRole(), user.getStatus());
+            });
     }
 
     /**
@@ -54,6 +72,12 @@ public class UserService {
      */
     public Mono<User> findByLogin( String username ){
         return userRepository.findUserByLogin( username );
+        
+    }
+
+    public Mono<User> findByEmail( String email ){
+        return userRepository.findUserByEmail( email )
+            .switchIfEmpty(Mono.error( new NoSuchElementException("Not Found user by email ")));
     }
     /**
      * Проверка паролья при авторизации
@@ -71,13 +95,56 @@ public class UserService {
      * @return boolean
      */
     private boolean isValidPassword(String password) {
-        return password.length() >= 8 && password.matches(".*[A-Za-z].*") && password.matches(".*\\d.*");
+        return password.matches("^(?=.*[A-ZА-Я])(?=.*[a-zа-яё])(?=.*\\d)(?=.*[@#$^&+=!№:?:%*(;_)}{])[A-Za-zА-Яа-яёЁ0-9@#$^&+=!№:?:%*(;_)}{]{8,}$");
+
     }
 
     private boolean isValidEmail(String email) {
         String emailRegex = "^[\\w-\\.]+@[\\w-]+\\.[a-zA-Z]{2,4}$";
         return email != null && email.matches(emailRegex);
     }
+    /**
+     * Проверка корректности при создании нового пользователя
+     * @param userRequest - входной запрос
+     * @return Mono Void
+     */
+    private Mono<Void> checkCorrectUser( UserRequest userRequest ){
+        if ( !isValidPassword( userRequest.getPassword() )){
+            return Mono.error( new IllegalArgumentException("Password does not meet complexity requirements!"));
+        }
+        if (!isValidEmail(userRequest.getEmail())) {
+            return Mono.error(new IllegalArgumentException("Invalid email format!"));
+        }
+        return userRepository.findUserByLogin( userRequest.getLogin() )
+            .flatMap( login -> { return Mono.error(new IllegalArgumentException("Not unique username, please specify another!")); })
+                .then( userRepository.findUserByEmail( userRequest.getEmail() )
+                .flatMap( email -> { return Mono.error(new IllegalArgumentException("Email already in use, please specify another!")); }));
+    }
+    /**
+     * Слздание нового пользователя
+     * @param userRequest - входной запрос
+     * @return Mono UserResponse 
+     */
+    @ExecuteTimeLog( operation = "addUserUserRequest" )
+    public Mono<UserResponse> addUserUserRequest( UserRequest userRequest ){
+        String salt = generateSalt();
+        return checkCorrectUser( userRequest )
+            .then( userRepository.save( new User( null, 
+                                                  userRequest.getLogin(),
+                                                  passwordEncoder.encode( secret + userRequest.getPassword() + salt ),
+                                                  userRequest.getRole(),
+                                                  userRequest.getEmail(),
+                                                  salt,
+                                                  false ))).flatMap( saveUser ->{
+                                                    return Mono.just( new UserResponse( saveUser.getLogin(),
+                                                                                        saveUser.getEmail(),
+                                                                                        saveUser.getRole(),
+                                                                                        saveUser.getStatus() ));
+                                                  });
+
+
+    }
+
     /**
      * Add user
      * @param user - user
@@ -101,11 +168,22 @@ public class UserService {
                                     })
                                     .switchIfEmpty(Mono.defer(() -> {
                                         String salt = generateSalt();
-                                        user.setRole("test");
-                                        user.setPassword(passwordEncoder.encode(secret + user.getPassword() + salt));
+                                        user.setPassword( passwordEncoder.encode( secret + user.getPassword() + salt ));
                                         user.setSalt(salt);
+                                        user.setStatus( false );
                                         return userRepository.save(user);
+                                        }).flatMap( userSave ->{
+                                            System.out.println( "userSave >>" + userSave );
+                                            return Mono.just( new UserResponse( userSave.getLogin(),
+                                                                                userSave.getEmail(),
+                                                                                userSave.getRole(),
+                                                                                userSave.getStatus() ));
                                         }));
                                 }));
     }
+
+
+
+
+
 }

@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
     })
 public interface IAuthenticationSwagger {
     
-    @PostMapping("/swagger/login")
+    @PostMapping("/swagger/token")
     @Operation( description = "Получение JWT Token", summary = "Получение JWT Token")
     public Mono<ResponseEntity<AuthResponse>> login( @RequestBody AuthRequest authRequest );
     
