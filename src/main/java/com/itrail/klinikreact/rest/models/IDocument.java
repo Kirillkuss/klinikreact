@@ -1,16 +1,12 @@
 package com.itrail.klinikreact.rest.models;
 
 import javax.ws.rs.core.MediaType;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.itrail.klinikreact.models.Document;
 import com.itrail.klinikreact.response.BaseError;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

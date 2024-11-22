@@ -5,18 +5,16 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.itrail.klinikreact.aspect.ExecuteTimeLog;
 import com.itrail.klinikreact.models.User;
 import com.itrail.klinikreact.repositories.UserRepository;
 import com.itrail.klinikreact.request.UserRequest;
 import com.itrail.klinikreact.response.UserResponse;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
@@ -40,11 +38,11 @@ public class UserService {
                                 user.setLogin("testone");
                                // user.setPassword(passwordEncoder.encode( secret + "dkjfRk4$451sfdf" + salt ));
                                 user.setPassword("dkjfRk4$451sfdf");
-                                user.setRole("1");
-                                user.setEmail( "Admin@mail.com");
+                                user.setRole("2");
+                                user.setEmail( "Adminsa24345@mail.com");
                                 user.setSalt( salt );
                                 user.setStatus( false );
-            //ddUserThree(  user ).subscribe( r -> log.info( r.toString() ));
+                                //addUser(  user ).subscribe( r -> log.info( r.toString() ));
             //userRepository.findById(33L ).subscribe( us -> log.info( us.toString()));
             //log.info( "init main user");
     }
@@ -86,8 +84,8 @@ public class UserService {
      * @param encodedPassword - закодированный пароль
      * @return boolean
      */
-    public boolean checkUserPassword(String rawPassword, String salt, String encodedPassword) {
-        return passwordEncoder.matches( secret + rawPassword + salt, encodedPassword);
+    public Mono<Boolean> checkUserPassword(String rawPassword, String salt, String encodedPassword) {
+        return Mono.just( passwordEncoder.matches( secret + rawPassword + salt, encodedPassword));
     }
     /**
      * Проверка размера и кол-во символов для пароля
@@ -183,7 +181,14 @@ public class UserService {
     }
 
 
+    public Mono<Void> blockUser( String login ){
+        return userRepository.findUserByLogin( login )
+            .flatMap( userFound -> {
+                userFound.setStatus( true );
+                return userRepository.save( userFound );
+            })
+            .switchIfEmpty( Mono.error(  new BadCredentialsException( "Not found user!" )))
+                .then();
 
-
-
+    }
 }

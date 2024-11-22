@@ -7,23 +7,24 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 import com.itrail.klinikreact.models.UserBlocking;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface UserBlockingRepository extends ReactiveCrudRepository<UserBlocking, Long>{
 
-        @Transactional
+    @Transactional
     @Modifying
-    @Query( "UPDATE UserBlocking ub \n" 
-            + "SET ub.status = false, ub.statusBlock = 2, ub.dateUnblock = current_timestamp \n"
-            + "WHERE ub.status = true AND b.datePlanUnblock <= current_timestamp")
-    public void unblockUserBlocking();
+    @Query( "UPDATE user_blocking ub \n" 
+            + "SET ub.status = false, ub.status_block = 2, ub.date_unblock = current_timestamp \n"
+            + "WHERE ub.status = true AND b.date_plan_unblock <= current_timestamp")
+    public Mono<Void> unblockUserBlocking();
     
     @Transactional
     @Modifying
-    @Query( "UPDATE UserBlocking ub \n" +
-            "SET ub.statusBlock = 3 \n" +
-            "WHERE ub.status = false and ub.statusBlock = 2" )
-    public void unblockUserBlockingStatus();
+    @Query( "UPDATE user_blocking ub \n" +
+            "SET ub.status_block = 3 \n" +
+            "WHERE ub.status = false and ub.status_block = 2" )
+    public Mono<Void> unblockUserBlockingStatus();
 
-    @Query("SELECT distinct( ub.user.idUser) FROM UserBlocking ub WHERE ub.status = false and statusBlock = 2 AND (ub.dateUnblock BETWEEN :from and :to )")
+    @Query("SELECT distinct( ub.user_id) FROM user_blocking ub WHERE ub.status = false and status_block = 2 AND (ub.date_unblock BETWEEN :from and :to )")
     public Flux<Long> getBlockStatus( LocalDateTime from, LocalDateTime to );
 }

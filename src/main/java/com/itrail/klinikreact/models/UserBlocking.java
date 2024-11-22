@@ -29,7 +29,7 @@ public class UserBlocking implements Serializable{
              description = "ИД блокировки",
              example     = "100",
              required    = true )
-    private Long idBlockUser;
+    private Long idBlock;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Column( name = "date_block")
@@ -69,5 +69,12 @@ public class UserBlocking implements Serializable{
              example     = "1",
              required    = true )
     private Integer statusBlock; 
+
+    @Column( name = "user_id")
+    @Schema( name        = "userId",
+             description = "Ид пользователя",
+             example     = "1",
+             required    = true )
+    private Long userId;
     
 }

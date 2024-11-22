@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 })
 public interface IAuthentication {
 
-    @GetMapping(value = "/login")
-    public Mono<String> login();
+    
+    //public Mono<String> login();
 
     @GetMapping(value = "/index")
     public Mono<String> index();

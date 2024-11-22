@@ -9,7 +9,6 @@ import com.itrail.klinikreact.models.Complaint;
 import com.itrail.klinikreact.models.TypeComplaint;
 import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.response.TypeComplaintResponse;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

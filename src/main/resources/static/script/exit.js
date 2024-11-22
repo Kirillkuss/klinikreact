@@ -4,13 +4,13 @@
     let inactivityTimer;
 
     function logout() {
-        fetch('/web/logout', {
+        fetch('/logout', {
             method: 'POST',
             credentials: 'include'
         })
         .then(response => {
             if (response.ok) {
-                window.location.href = "/web/login"; 
+                window.location.href = "/login"; 
             } else {
                 console.error('Ошибка при выходе из системы:', response.statusText);
                 alert('Ошибка при выходе. Попробуйте еще раз.');
@@ -73,13 +73,13 @@
 })();
 
 function exit() {
-    fetch('/web/logout', {
+    fetch('/logout', {
         method: 'POST',
         credentials: 'include'
     })
     .then(response => {
         if (response.ok) {
-            window.location.href = "/web/login"; 
+            window.location.href = "/login"; 
         } else {
             console.error('Ошибка при выходе из системы:', response.statusText);
             alert('Ошибка при выходе. Попробуйте еще раз.');
