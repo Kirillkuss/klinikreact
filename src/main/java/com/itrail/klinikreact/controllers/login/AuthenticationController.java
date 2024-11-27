@@ -2,6 +2,8 @@ package com.itrail.klinikreact.controllers.login;
 
 import java.util.NoSuchElementException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,19 +17,6 @@ import reactor.core.publisher.Mono;
 @Controller
 public class AuthenticationController implements IAuthentication {
 
-    @GetMapping(value = "/login")
-    public Mono<String> login() {
-        return Mono.just( "login");
-    }
-
-    public Mono<String> index() {
-        return Mono.just( "redirect:/index.html");
-    }
-
-    public Mono<String> changePassword() {
-        return Mono.just( "change-password");
-    }
-    
     @ExceptionHandler(Throwable.class)
     public Mono<BaseError> errBaseResponse( Throwable ex ){
         log.info("Throwable");
@@ -51,4 +40,39 @@ public class AuthenticationController implements IAuthentication {
         log.info("BadCredentialsException");
         return Mono.just( new BaseError( 404, ex.getMessage() ));
     }
+
+    @GetMapping(value = "/login")
+    public Mono<String> login() {
+        return Mono.just( "login");
+    }
+
+    public Mono<String> index() {
+        return Mono.just( "redirect:/index.html");
+    }
+
+    public Mono<String> changePassword() {
+        return Mono.just( "change-password");
+    }
+
+    @Override
+    public Mono<String> clearErrorMessage(HttpServletRequest request) {
+        request.getSession().removeAttribute("error");
+        return Mono.just("redirect:/login"); 
+    }
+
+    @Override
+    public Mono<String> requestPasswordChange( String user, HttpServletRequest request ) {
+       /**  try{
+            EmailRequest emailRequest = new EmailRequest();
+            emailRequest.setLogin( user );
+            emailRequest.setSubject("Изменение пароля");
+            emailRequest.setBody("Ваш пароль был изменен, используйте этот: ");
+            emailService.sendSimpleEmailMessage(emailRequest);;
+        }catch( Exception ex ){
+            redirectAttributes.addFlashAttribute("error", ex.getMessage() );
+        }*/
+        return Mono.just("redirect:/change-password"); 
+    }
+    
+
 }

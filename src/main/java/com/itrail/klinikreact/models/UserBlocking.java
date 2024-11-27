@@ -55,13 +55,12 @@ public class UserBlocking implements Serializable{
              required    = true )
     private LocalDateTime dateUnblock;
 
-
-    @Column( name = "status")
-    @Schema( name        = "status",
-             description = "статус",
-             example     = "true",
+    @Column( name = "user_id")
+    @Schema( name        = "userId",
+             description = "Ид пользователя",
+             example     = "1",
              required    = true )
-    private Boolean status;
+    private Long userId;
 
     @Column( name = "status_block")
     @Schema( name        = "statusBlock",
@@ -70,11 +69,15 @@ public class UserBlocking implements Serializable{
              required    = true )
     private Integer statusBlock; 
 
-    @Column( name = "user_id")
-    @Schema( name        = "userId",
-             description = "Ид пользователя",
-             example     = "1",
+    @Column( name = "status")
+    @Schema( name        = "status",
+             description = "статус",
+             example     = "true",
              required    = true )
-    private Long userId;
+    private Boolean status;
+
+
+
+
     
 }

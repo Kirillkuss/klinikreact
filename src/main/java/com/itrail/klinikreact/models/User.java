@@ -1,5 +1,7 @@
 package com.itrail.klinikreact.models;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
@@ -20,7 +22,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class User {
+public class User implements Serializable{
 
     @Id
     @Hidden

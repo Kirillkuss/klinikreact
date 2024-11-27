@@ -13,18 +13,19 @@ public interface UserBlockingRepository extends ReactiveCrudRepository<UserBlock
 
     @Transactional
     @Modifying
-    @Query( "UPDATE user_blocking ub \n" 
-            + "SET ub.status = false, ub.status_block = 2, ub.date_unblock = current_timestamp \n"
-            + "WHERE ub.status = true AND b.date_plan_unblock <= current_timestamp")
+    @Query( "UPDATE user_blocking \n" + 
+            "SET status = false, status_block = 2, date_unblock = current_timestamp \n" + 
+            "WHERE status = true AND date_plan_unblock <= current_timestamp")
     public Mono<Void> unblockUserBlocking();
     
     @Transactional
     @Modifying
-    @Query( "UPDATE user_blocking ub \n" +
-            "SET ub.status_block = 3 \n" +
-            "WHERE ub.status = false and ub.status_block = 2" )
+    @Query( "UPDATE user_blocking \n" +
+            "SET status_block = 3 \n" +
+            "WHERE status = false and status_block = 2" )
     public Mono<Void> unblockUserBlockingStatus();
 
-    @Query("SELECT distinct( ub.user_id) FROM user_blocking ub WHERE ub.status = false and status_block = 2 AND (ub.date_unblock BETWEEN :from and :to )")
+    @Query("SELECT distinct (ub.user_id) FROM user_blocking ub WHERE ub.status = false and ub.status_block = 2 AND (ub.date_unblock BETWEEN :from and :to )")
     public Flux<Long> getBlockStatus( LocalDateTime from, LocalDateTime to );
+
 }

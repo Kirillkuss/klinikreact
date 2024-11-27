@@ -10,7 +10,8 @@ import com.itrail.klinikreact.request.UserRequest;
 import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.response.UserResponse;
 import com.itrail.klinikreact.rest.models.IUser;
-//import com.itrail.klinikreact.services.model.UserService;
+import com.itrail.klinikreact.security.auth.AuthService;
+import com.itrail.klinikreact.services.model.UserService;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,7 +20,8 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class UserController implements IUser{
 
-    //private final UserService userService;
+    private final UserService userService;
+    private final AuthService authService;
 
     @ExceptionHandler(Throwable.class)
     public Flux<BaseError> errBaseResponse( Throwable ex ){
@@ -39,14 +41,12 @@ public class UserController implements IUser{
 
     @Override
     public Flux<UserResponse> getUsers() {
-        //return userService.getUsers();
-        return null;
+        return userService.getUsers();
     }
 
     @Override
     public Mono<UserResponse> addUser( UserRequest userRequest ) {
-        //return userService.addUserUserRequest( userRequest );
-        return null;
+        return userService.addUserUserRequest( userRequest );
     }
     
 }

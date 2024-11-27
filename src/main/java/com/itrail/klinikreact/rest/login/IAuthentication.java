@@ -6,8 +6,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import reactor.core.publisher.Mono;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @ApiResponses(value = {
         @ApiResponse( responseCode = "200" , description = "Authentication success", content = { @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(  ))) }),
@@ -16,14 +19,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 })
 public interface IAuthentication {
 
-    
-    //public Mono<String> login();
-
     @GetMapping(value = "/index")
     public Mono<String> index();
 
     @GetMapping(value = "/change-password")
     public Mono<String> changePassword();
+
+    @PostMapping(value = "change-password")
+    public Mono<String> requestPasswordChange( @RequestParam("user") String user, HttpServletRequest request);
+
+    @PostMapping(value = "clear-error-message", produces = MediaType.APPLICATION_JSON)
+    public Mono<String> clearErrorMessage(HttpServletRequest request);
 
    /**  @PostMapping(value = "change-password")
     public String requestPasswordChange( @RequestParam("user") String user, HttpServletRequest request, RedirectAttributes redirectAttributes );

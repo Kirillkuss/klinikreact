@@ -32,7 +32,8 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation group: 'org.postgresql', name: 'r2dbc-postgresql', version: '1.0.0.RELEASE'
+	//implementation group: 'io.r2dbc', name: 'r2dbc-postgresql', version: '0.8.11.RELEASE'
+	implementation("io.r2dbc:r2dbc-postgresql:0.8.13.RELEASE")
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-webflux-ui', version: '1.6.14'
 
 	implementation group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1.1'

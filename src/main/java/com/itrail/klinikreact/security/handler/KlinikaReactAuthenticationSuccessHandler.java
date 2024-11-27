@@ -27,9 +27,9 @@ public class KlinikaReactAuthenticationSuccessHandler implements ServerAuthentic
 
         String redirectUrl;
         if (role.equals("ROLE_2")) {
-            redirectUrl = "/webjars/swagger-ui/index.html";
+            redirectUrl = "/react/webjars/swagger-ui/index.html";
         } else {
-            redirectUrl = "/index";
+            redirectUrl = "/react/index";
         }
         // Установка статуса ответа и заголовка для перенаправления
         exchange.getResponse().setStatusCode(HttpStatus.FOUND); // 302 Found

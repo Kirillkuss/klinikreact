@@ -35,16 +35,17 @@ public class UserService {
     protected void init(){
         String salt = generateSalt();
         User user = new User();
-                                user.setLogin("testone");
-                               // user.setPassword(passwordEncoder.encode( secret + "dkjfRk4$451sfdf" + salt ));
-                                user.setPassword("dkjfRk4$451sfdf");
+                                user.setLogin("user");
+                                user.setPassword(passwordEncoder.encode( secret + "dkjfRk4$451sfdf" + salt ));
+                                user.setPassword("user");
                                 user.setRole("2");
-                                user.setEmail( "Adminsa24345@mail.com");
+                                user.setEmail( "User@mail.com");
                                 user.setSalt( salt );
                                 user.setStatus( false );
                                 //addUser(  user ).subscribe( r -> log.info( r.toString() ));
             //userRepository.findById(33L ).subscribe( us -> log.info( us.toString()));
             //log.info( "init main user");
+           // userRepository.blockUser( "admin");
     }
 
     public Flux<UserResponse> getUsers() {
@@ -171,7 +172,6 @@ public class UserService {
                                         user.setStatus( false );
                                         return userRepository.save(user);
                                         }).flatMap( userSave ->{
-                                            System.out.println( "userSave >>" + userSave );
                                             return Mono.just( new UserResponse( userSave.getLogin(),
                                                                                 userSave.getEmail(),
                                                                                 userSave.getRole(),
@@ -180,15 +180,9 @@ public class UserService {
                                 }));
     }
 
-
-    public Mono<Void> blockUser( String login ){
-        return userRepository.findUserByLogin( login )
-            .flatMap( userFound -> {
-                userFound.setStatus( true );
-                return userRepository.save( userFound );
-            })
-            .switchIfEmpty( Mono.error(  new BadCredentialsException( "Not found user!" )))
-                .then();
-
+    public Mono<Void> blockUser(String login) {
+        return userRepository.findUserByLogin( login ).flatMap( us -> {
+            return  userRepository.blockUser( login );
+        }).switchIfEmpty( Mono.error(  new BadCredentialsException( "User blocking!" )));
     }
 }

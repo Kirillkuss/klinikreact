@@ -4,13 +4,13 @@
     let inactivityTimer;
 
     function logout() {
-        fetch('/logout', {
+        fetch('/react/logout', {
             method: 'POST',
             credentials: 'include'
         })
         .then(response => {
             if (response.ok) {
-                window.location.href = "/login"; 
+                window.location.href = "/react/login"; 
             } else {
                 console.error('Ошибка при выходе из системы:', response.statusText);
                 alert('Ошибка при выходе. Попробуйте еще раз.');
@@ -73,13 +73,13 @@
 })();
 
 function exit() {
-    fetch('/logout', {
+    fetch('/react/logout', {
         method: 'POST',
         credentials: 'include'
     })
     .then(response => {
         if (response.ok) {
-            window.location.href = "/login"; 
+            window.location.href = "/react/login"; 
         } else {
             console.error('Ошибка при выходе из системы:', response.statusText);
             alert('Ошибка при выходе. Попробуйте еще раз.');
@@ -92,6 +92,6 @@ function exit() {
 
 $(document).ready(function() {
     $('#swagger').on("click");
-        var url = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/klinikreact";
+        var url = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/react/klinikreact";
         document.getElementById("swagger").href = url;
 });

@@ -15,7 +15,7 @@ function findByWordDocument() {
             $.ajax({
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
-                url: protocol + "//"+ hostname + ':' + port + "/documents/find/{word}",
+                url: protocol + "//"+ hostname + ':' + port + "/react/documents/find/{word}",
                 data:{ word: word } ,
                 cache: false,
                 success: function( json ) {
@@ -72,7 +72,7 @@ function AddDocument() {
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
-                url: "http://" + hostname + ':' + port + "/documents/add",
+                url: "http://" + hostname + ':' + port + "/react/documents/add",
                 data: JSON.stringify({typeDocument: typeDocument, seria: seria, numar: numar, snils: snils, polis: polis}),
                 cache: false,
                 success: function( json ) {
@@ -105,7 +105,7 @@ function AddDocument() {
         $('table tbody').on('mousedown', 'tr', function(e) {
             $(this).addClass('highlight').siblings().removeClass('highlight');
         });
-        $.getJSON(protocol + '//'+ hostname + ':' + port + '/documents/lazy/{page}{size}?page='+page+'&size='+size, function(json) {
+        $.getJSON(protocol + '//'+ hostname + ':' + port + '/react/documents/lazy/{page}{size}?page='+page+'&size='+size, function(json) {
             var tr=[];
             $('tbody').empty();
             var startIndex = (page - 1) * size + 1;
@@ -127,7 +127,7 @@ function AddDocument() {
 
     function getCountDocuments() {
         return new Promise((resolve, reject) => {
-            $.getJSON(protocol + '//' + hostname + ':' + port + '/documents/count')
+            $.getJSON(protocol + '//' + hostname + ':' + port + '/react/documents/count')
                 .done(function(json) {
                     var count = json;
                     resolve(count); 
