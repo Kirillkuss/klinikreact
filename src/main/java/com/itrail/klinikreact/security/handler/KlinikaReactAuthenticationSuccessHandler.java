@@ -24,7 +24,6 @@ public class KlinikaReactAuthenticationSuccessHandler implements ServerAuthentic
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
                 .orElse("");
-
         String redirectUrl;
         if (role.equals("ROLE_2")) {
             redirectUrl = "/react/webjars/swagger-ui/index.html";

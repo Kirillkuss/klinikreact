@@ -132,4 +132,45 @@ BEGIN
 		GROUP
 			BY t.name;
 	END;
-$function
+$function$;
+
+-- Разбокировка пользователей
+CREATE OR REPLACE PROCEDURE update_user_blocking_and_status(
+    from_date TIMESTAMP,
+    to_date TIMESTAMP
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    updated_rows INTEGER;
+BEGIN
+	-- Разблокировка в таблицы блокировки
+    UPDATE user_blocking 
+    SET status = false, status_block = 2, date_unblock = current_timestamp 
+    WHERE status = true AND date_plan_unblock <= current_timestamp;
+	-- Разблокировка пользователя в таблице польз
+    WITH blocked_users AS (
+        SELECT DISTINCT ub.user_id 
+        FROM user_blocking ub 
+        WHERE ub.status = false 
+          AND ub.status_block = 2 
+          AND (ub.date_unblock BETWEEN from_date AND to_date)
+    )
+    UPDATE kl_user 
+    SET status = false 
+    WHERE id IN (SELECT user_id FROM blocked_users) 
+    AND status = true;
+	-- Фиксация блокировка на статус - завершен
+    WITH unblocked_users AS (
+        SELECT DISTINCT ub.user_id 
+        FROM user_blocking ub 
+        WHERE ub.status = false 
+          AND ub.status_block = 2 
+          AND (ub.date_unblock BETWEEN from_date AND to_date)
+    )
+	UPDATE user_blocking 
+	SET status_block = 3 
+	WHERE status = false and user_id IN (SELECT user_id FROM unblocked_users); 
+	
+END;
+$$;

@@ -36,19 +36,18 @@ public class SecurityConfiguration {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http.authorizeExchange(exchanges -> exchanges
-            .pathMatchers("/login", "/change-password", "/logout", "/icon/").permitAll()
-            //.pathMatchers("/react/webjars/swagger-ui/index.html").hasAnyRole("2").hasAnyRole("ROLE_1", "ROLE_0")
-            .pathMatchers("/react/webjars/swagger-ui/index.html", "/react/api/**", "/react/", "/react/klinikreact", "/react/index", "/react/**").authenticated()
-            .anyExchange().authenticated())
-            
-            .formLogin(formLogin -> formLogin
-                .authenticationSuccessHandler( klinikaReactAuthenticationSuccessHandler )
-                .authenticationFailureHandler( klinikaReactAuthenticationFailureHandler )
-                .loginPage("/login"))    
-            .logout( logout -> 
-                logout.logoutUrl("/logout"))
-            .csrf(csrf -> csrf.disable())
-            .build();
+                .pathMatchers("/login", "/change-password", "/logout", "/icon/").permitAll()
+                .pathMatchers("/react/webjars/swagger-ui/index.html").hasRole("2") 
+                .pathMatchers("/react/api/", "/react/", "/react/klinikreact", "/react/index", "/react/").hasAnyRole("0", "1") 
+                .anyExchange().authenticated())
+                .formLogin(formLogin -> formLogin
+                    .authenticationSuccessHandler(klinikaReactAuthenticationSuccessHandler)
+                    .authenticationFailureHandler(klinikaReactAuthenticationFailureHandler)
+                    .loginPage("/login"))    
+                .logout(logout -> 
+                    logout.logoutUrl("/logout"))
+                .csrf(csrf -> csrf.disable())
+                .build();
     }
 
     /**@Bean

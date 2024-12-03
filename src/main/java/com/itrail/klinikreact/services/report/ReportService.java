@@ -1,21 +1,15 @@
 package com.itrail.klinikreact.services.report;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
-
-import com.itrail.klinikreact.repositories.RecordPatientRepository;
 import com.itrail.klinikreact.request.RecordPatientRequest;
 import com.itrail.klinikreact.response.report.CardPatientReport;
 import com.itrail.klinikreact.response.report.DrugTreatmentReport;
 import com.itrail.klinikreact.response.report.RecordPatientReport;
 import com.itrail.klinikreact.response.report.RehabilitationSolutionReport;
 import com.itrail.klinikreact.services.model.CardPatientService;
-import com.itrail.klinikreact.services.model.PatientService;
 import com.itrail.klinikreact.services.model.RecordPatientService;
-
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

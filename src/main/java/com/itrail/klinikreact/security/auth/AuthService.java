@@ -1,11 +1,10 @@
 package com.itrail.klinikreact.security.auth;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.BadCredentialsException;
 import com.itrail.klinikreact.models.User;
@@ -15,7 +14,6 @@ import com.itrail.klinikreact.repositories.UserRepository;
 import com.itrail.klinikreact.services.model.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -26,11 +24,12 @@ public class AuthService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final UserBlockingRepository userBlockingRepository;
+    private final DatabaseClient databaseClient;
 
     private final String messageError      = "Слишком много неудачных попыток входа, попробуйте позже!";
     private final String messageErrorCount = "Неправильное имя пользователя или пароль, количество попыток: ";
 
-    private final int maxAttempts = 1; 
+    private final int maxAttempts = 3; 
     public final Map<String, Integer> failedAttempts = new HashMap<>();
 
     public Mono<User> checkUser(String login, String password) {
@@ -55,14 +54,14 @@ public class AuthService {
 
     private Mono<Void> validateAttempts(int currentAttempts) {
         if (currentAttempts >= maxAttempts) {
-            return Mono.error(new BadCredentialsException("Maximum number of login attempts exceeded!"));
+            return Mono.error(new BadCredentialsException( messageError ));
         }
         return Mono.empty();
     }
 
     private Mono<Void> validateUserStatus(User user) {
         if (user.getStatus()) {
-            return Mono.error(new BadCredentialsException("User blocked!"));
+            return Mono.error(new BadCredentialsException( messageError ));
         }
         return Mono.empty();
     }
@@ -85,7 +84,7 @@ public class AuthService {
             failedAttempts.remove(login);
             return addBlocking(login);
         } else {
-            return Mono.error(new BadCredentialsException( "Wrong password! Attempts left: " + remainingAttempts));
+            return Mono.error(new BadCredentialsException( messageErrorCount + remainingAttempts));
         }
     }
 
@@ -93,7 +92,7 @@ public class AuthService {
         return userRepository.findUserByLogin(login).flatMap( user ->{
             UserBlocking userBlocking = new UserBlocking();
             userBlocking.setDateBlock(LocalDateTime.now());
-            userBlocking.setDatePlanUnblock(LocalDateTime.now().plusMinutes( 1));
+            userBlocking.setDatePlanUnblock(LocalDateTime.now().plusMinutes( 5));
             userBlocking.setUserId( user.getId());
             userBlocking.setStatusBlock( 1 );
             userBlocking.setStatus( true );
@@ -104,28 +103,20 @@ public class AuthService {
                 });
         });     
     } 
-
-    @Scheduled(fixedRate = 3000)
-    //@Scheduled(initialDelay = 5000, fixedRate = 60000)
+ 
+    @Scheduled(initialDelay = 5000, fixedRate = 10000)
 	public void unblockUser() {
-        userBlockingRepository.unblockUserBlocking()
-            .then( updateUser().flatMap( t ->{
-                return Mono.empty();
-            }).then())
-            .then( userBlockingRepository.unblockUserBlockingStatus() )
-                .subscribe();
+        updateUserBlockingAndStatus( LocalDateTime.now().minusHours(15 ), LocalDateTime.now()).subscribe();
     }
 
-    private Flux<Object> updateUser(){
-        return  userBlockingRepository.getBlockStatus( LocalDateTime.now().minusMinutes(150), LocalDateTime.now() )
-            .flatMap( t-> {
-                log.info( "id >>> " + t );
-                return userRepository.findById( t )
-                    .flatMap( user -> {
-                        log.info( "unblock user with login >>>>" + user.getLogin() );
-                        user.setStatus( false );
-                        return userRepository.save( user );
-                    });
-            });
-    }        
+    private Mono<Void> updateUserBlockingAndStatus( LocalDateTime from, LocalDateTime to ){
+        return databaseClient.sql("CALL update_user_blocking_and_status(:from_date, :to_date);")
+            .bind("from_date", from)
+            .bind("to_date", to)
+            .fetch()
+            .rowsUpdated()
+            .then();
+    }
+
+    
 }
