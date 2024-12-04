@@ -1,11 +1,8 @@
 package com.itrail.klinikreact.controllers.models;
 
-import java.util.NoSuchElementException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import com.itrail.klinikreact.models.Complaint;
 import com.itrail.klinikreact.models.TypeComplaint;
-import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.response.TypeComplaintResponse;
 import com.itrail.klinikreact.rest.models.IComplaint;
 import com.itrail.klinikreact.services.model.ComplaintService;
@@ -20,22 +17,6 @@ public class ComplaintCotroller implements IComplaint {
 
     private final TypeComplaintService typeComplaintService;
     private final ComplaintService complaintService;
-
-    @ExceptionHandler(Throwable.class)
-    public Flux<BaseError> errBaseResponse( Throwable ex ){
-        ex.printStackTrace();
-        return Flux.just(  new BaseError( 500, ex.getMessage() ));
-    }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    public Flux<BaseError> errBaseResponse( NoSuchElementException ex ){
-        return Flux.just( new BaseError( 400, ex.getMessage() ));
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public Flux<BaseError> errBaseResponse( IllegalArgumentException ex ){
-        return Flux.just( new BaseError( 404, ex.getMessage() ));
-    }
 
     @Override
     public Flux<Complaint> getLazyComplaints(int page, int size ) {

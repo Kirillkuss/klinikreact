@@ -1,15 +1,8 @@
 package com.itrail.klinikreact.controllers.login;
 
-import java.util.NoSuchElementException;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.rest.login.IAuthentication;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -18,40 +11,25 @@ import reactor.core.publisher.Mono;
 @Controller
 public class AuthenticationController implements IAuthentication {
 
-    @ExceptionHandler(Throwable.class)
-    public Mono<BaseError> errBaseResponse( Throwable ex ){
-        log.info("Throwable");
-        return Mono.just(  new BaseError( 500, ex.getMessage() ));
+    @PreAuthorize("hasAnyRole('0', '1')")
+    @Override
+    public Mono<String> path() {
+        return Mono.just( "redirect:/index.html");
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public Mono<BaseError> errBaseResponse( NoSuchElementException ex ){
-        log.info("NoSuchElementException");
-        return Mono.just( new BaseError( 400, ex.getMessage() ));
+    @PreAuthorize("hasAnyRole('0', '1')")
+    public Mono<String> index() {
+        return Mono.just( "redirect:/index.html");
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public Mono<BaseError> errBaseResponse( IllegalArgumentException ex ){
-        log.info("IllegalArgumentException");
-        return Mono.just( new BaseError( 404, ex.getMessage() ));
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public Mono<BaseError> errBaseResponse( BadCredentialsException ex ){
-        log.info("BadCredentialsException");
-        return Mono.just( new BaseError( 404, ex.getMessage() ));
-    }
-
-    @GetMapping(value = "/login")
+    @Override
     public Mono<String> login() {
         return Mono.just( "login");
     }
-    /**
-     * access to ui for users with role 0 and 1
-     */
-    @PreAuthorize("hasRole('0')")
-    public Mono<String> index() {
-        return Mono.just( "redirect:/index.html");
+
+    @Override
+    public Mono<String> error() {
+        return Mono.just( "error");
     }
 
     public Mono<String> changePassword() {
@@ -77,6 +55,5 @@ public class AuthenticationController implements IAuthentication {
         }*/
         return Mono.just("redirect:/change-password"); 
     }
-    
 
 }

@@ -19,8 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 })
 public interface IAuthentication {
 
+    @GetMapping(value = "/")
+    public Mono<String> path();
+
     @GetMapping(value = "/index")
     public Mono<String> index();
+
+    @GetMapping(value = "/login")
+    public Mono<String> login();
 
     @GetMapping(value = "/change-password")
     public Mono<String> changePassword();
@@ -30,6 +36,9 @@ public interface IAuthentication {
 
     @PostMapping(value = "clear-error-message", produces = MediaType.APPLICATION_JSON)
     public Mono<String> clearErrorMessage(HttpServletRequest request);
+
+    @GetMapping( value = "/error")
+    public Mono<String> error();
 
    /**  @PostMapping(value = "change-password")
     public String requestPasswordChange( @RequestParam("user") String user, HttpServletRequest request, RedirectAttributes redirectAttributes );

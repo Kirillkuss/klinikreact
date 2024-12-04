@@ -51,6 +51,7 @@ public class DoctorService {
     }
 
     public Mono<Doctor> getFindById( Long id ){
-        return doctorRepository.findById( id );
+        return doctorRepository.findById( id )
+            .switchIfEmpty( Mono.error( new NoSuchElementException( "По данному запросу ничего не найдено")));
     }
 }

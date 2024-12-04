@@ -1,7 +1,10 @@
 package com.itrail.klinikreact.security.auth;
 
+import java.net.URI;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,56 +24,29 @@ public class SecurityConfiguration {
     private final KlinikaReactAuthenticationFailureHandler klinikaReactAuthenticationFailureHandler;
     private final KlinikaReactAuthenticationSuccessHandler klinikaReactAuthenticationSuccessHandler;
 
-   /** @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        return http.authorizeExchange(exchanges -> exchanges
-            .pathMatchers("/login", "/change-password", "/logout", "/icon/").permitAll()
-            .pathMatchers("/webjars/swagger-ui/index.html", "/api", "/", "/klinikreact", "/index").authenticated()
-            .anyExchange().authenticated())
-            .formLogin(formLogin -> formLogin
-                .authenticationSuccessHandler( klinikaReactAuthenticationSuccessHandler )
-                .authenticationFailureHandler( klinikaReactAuthenticationFailureHandler )
-                .loginPage("/login"))
-            .csrf(csrf -> csrf.disable())
-            .build();
-    }*/
-
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http.authorizeExchange(exchanges -> exchanges
-                .pathMatchers("/login", "/change-password", "/logout", "/icon/").permitAll()
-                .pathMatchers("/react/webjars/swagger-ui/index.html").hasAuthority( "ROLE_2")
-                .pathMatchers("/react/api/", "/react/", "/react/klinikreact", "/react/index", "/react/", "/index.html", "/index").hasAuthority( "ROLE_0")
+                .pathMatchers("/login", "/change-password", "/logout", "/icon/", "/error").permitAll()
+                .pathMatchers("/react/webjars/swagger-ui/index.html").hasAuthority("ROLE_2")
+                .pathMatchers("/react/api/", "/react/", "/react/klinikreact", "/react/index", "/index.html", "/index")
+                    .hasAnyAuthority("ROLE_0", "ROLE_1", "0", "1")
                 .anyExchange().authenticated())
-                .formLogin(formLogin -> formLogin
-                    .authenticationSuccessHandler(klinikaReactAuthenticationSuccessHandler)
-                    .authenticationFailureHandler(klinikaReactAuthenticationFailureHandler)
-                    .loginPage("/login"))    
-                .logout(logout -> 
-                    logout.logoutUrl("/logout"))
-                .csrf(csrf -> csrf.disable())
-                .build();
-    }
-
-    /**@Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        return http.authorizeExchange()
-                .pathMatchers("/login", "/change-password", "/logout", "/icon/").permitAll()
-                .pathMatchers("/react/webjars/swagger-ui/index.html").hasAnyRole("ROLE_2")
-                .pathMatchers("/react/webjars/swagger-ui/index.html", "/react/api/**", "/react/", "/react/klinikreact", "/react/index", "/react/**").hasAnyRole("ROLE_1", "ROLE_0")
-                .anyExchange().authenticated()
-            .and()
-            .formLogin(form -> form
-                .loginPage("/login")
-                .authenticationSuccessHandler( klinikaReactAuthenticationSuccessHandler)
-                .authenticationFailureHandler( klinikaReactAuthenticationFailureHandler)
-            )
+            .formLogin(formLogin -> formLogin
+                .authenticationSuccessHandler(klinikaReactAuthenticationSuccessHandler)
+                .authenticationFailureHandler(klinikaReactAuthenticationFailureHandler)
+                .loginPage("/login"))
             .logout(logout -> logout.logoutUrl("/logout"))
             .csrf(csrf -> csrf.disable())
+            .exceptionHandling(exceptionHandling -> 
+                exceptionHandling.accessDeniedHandler((exchange, denied) -> {
+                    ServerHttpResponse response = exchange.getResponse();
+                    response.setStatusCode(HttpStatus.FOUND);
+                    response.getHeaders().setLocation(URI.create("/react/error"));
+                    return response.setComplete();
+                }))
             .build();
-            }
-   */
-    
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
