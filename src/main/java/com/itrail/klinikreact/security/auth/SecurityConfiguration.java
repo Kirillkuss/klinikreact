@@ -1,6 +1,7 @@
 package com.itrail.klinikreact.security.auth;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 
+@Configuration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 @RequiredArgsConstructor
@@ -37,8 +39,8 @@ public class SecurityConfiguration {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http.authorizeExchange(exchanges -> exchanges
                 .pathMatchers("/login", "/change-password", "/logout", "/icon/").permitAll()
-                .pathMatchers("/react/webjars/swagger-ui/index.html").hasRole("2") 
-                .pathMatchers("/react/api/", "/react/", "/react/klinikreact", "/react/index", "/react/").hasAnyRole("0", "1") 
+                .pathMatchers("/react/webjars/swagger-ui/index.html").hasAuthority( "ROLE_2")
+                .pathMatchers("/react/api/", "/react/", "/react/klinikreact", "/react/index", "/react/", "/index.html", "/index").hasAuthority( "ROLE_0")
                 .anyExchange().authenticated())
                 .formLogin(formLogin -> formLogin
                     .authenticationSuccessHandler(klinikaReactAuthenticationSuccessHandler)

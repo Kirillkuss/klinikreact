@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,7 +46,10 @@ public class AuthenticationController implements IAuthentication {
     public Mono<String> login() {
         return Mono.just( "login");
     }
-
+    /**
+     * access to ui for users with role 0 and 1
+     */
+    @PreAuthorize("hasRole('0')")
     public Mono<String> index() {
         return Mono.just( "redirect:/index.html");
     }
