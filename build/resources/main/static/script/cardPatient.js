@@ -11,7 +11,7 @@ function lazyCard( page, size) {
     $('table tbody').on('mousedown', 'tr', function(e) {
         $(this).addClass('highlight').siblings().removeClass('highlight');
     });
-    $.getJSON( window.location.protocol + '//'+ hostname + ':' + port +'/card-patients/lazy/{page}{size}?page='+page+'&size='+size, function(json) {
+    $.getJSON( window.location.protocol + '//'+ hostname + ':' + port +'/react/card-patients/lazy/{page}{size}?page='+page+'&size='+size, function(json) {
         var tr=[];
         $('tbody').empty();
         var startIndex = (page - 1) * size + 1;
@@ -55,7 +55,7 @@ function AddCardPatient() {
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
-                url: window.location.protocol + "//"+ hostname  +":" + port +"/card-patients/add?idPatient=" + idPatient,
+                url: window.location.protocol + "//"+ hostname  +":" + port +"/react/card-patients/add?idPatient=" + idPatient,
                 data: JSON.stringify ({diagnosis: diagnosis,
                                        allergy: allergy,
                                        note: note,
@@ -86,7 +86,7 @@ function findByDocumentCard() {
             $.ajax({
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
-                url: window.location.protocol +"//"+ hostname +":" + port +"/card-patients/{param}",
+                url: window.location.protocol +"//"+ hostname +":" + port +"/react/card-patients/{param}",
                 data:{ param: param } ,
                 cache: false,
                 success: function( json ) {
@@ -125,7 +125,7 @@ function findByDocumentCard() {
 
 function getCountCard() {
     return new Promise((resolve, reject) => {
-        $.getJSON(protocol + '//' + hostname + ':' + port + '/card-patients/count')
+        $.getJSON(protocol + '//' + hostname + ':' + port + '/react/card-patients/count')
             .done(function(json) {
                 var count = json;
                 resolve(count); 

@@ -27,9 +27,9 @@ public class SecurityConfiguration {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http.authorizeExchange(exchanges -> exchanges
-                .pathMatchers("/login", "/change-password", "/logout", "/icon/", "/error").permitAll()
-                .pathMatchers("/react/webjars/swagger-ui/index.html").hasAuthority("ROLE_2")
-                .pathMatchers("/react/api/", "/react/", "/react/klinikreact", "/react/index", "/index.html", "/index")
+                .pathMatchers(  "/login", "/change-password", "/react/logout", "/icon/", "/error", "/test").permitAll()
+                .pathMatchers("/react/webjars/swagger-ui/index.html", "/react/klinikreact").hasAnyAuthority("ROLE_2", "2")
+                .pathMatchers("/react/api/", "/react/", "/react/klinikreact", "/react/index", "/index.html", "/index", "/*.html")
                     .hasAnyAuthority("ROLE_0", "ROLE_1", "0", "1")
                 .anyExchange().authenticated())
             .formLogin(formLogin -> formLogin

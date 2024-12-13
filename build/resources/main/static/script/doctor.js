@@ -12,7 +12,7 @@ function findByWordDoctor() {
             $.ajax({
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
-                url: protocol + "//"+ hostname + ":" + port + "/doctors/find-fio/{word}{page}{size}",
+                url: protocol + "//"+ hostname + ":" + port + "/react/doctors/find-fio/{word}{page}{size}",
                 data:{ word: word, page: 1, size: 100 } ,
                 cache: false,
                 success: function( json ) {     
@@ -48,7 +48,7 @@ function lazyDoctors( page, size) {
     $('table tbody').on('mousedown', 'tr', function(e) {
         $(this).addClass('highlight').siblings().removeClass('highlight');
     });
-     $.get( protocol + '//'+ hostname + ':' + port +'/doctors/lazy/{page}{size}?page='+page+'&size='+size, function(json) {
+     $.get( protocol + '//'+ hostname + ':' + port +'/react/doctors/lazy/{page}{size}?page='+page+'&size='+size, function(json) {
         var tr=[];
         $('tbody').empty();
         var startIndex = (page - 1) * size + 1;
@@ -83,7 +83,7 @@ function AddDoctor() {
         $.ajax({
             type: "POST",
             contentType: "application/json; charset=utf-8",
-            url: protocol + "//" + hostname + ':' + port + "/doctors/add",
+            url: protocol + "//" + hostname + ':' + port + "/react/doctors/add",
             data: JSON.stringify({ surname: surname, name: name, fullName: fullName }),
             cache: false,
             success: function (json) {
@@ -103,7 +103,7 @@ function AddDoctor() {
 
         function getCountDoctor() {
             return new Promise((resolve, reject) => {
-                $.getJSON(protocol + '//' + hostname + ':' + port + '/doctors/count')
+                $.getJSON(protocol + '//' + hostname + ':' + port + '/react/doctors/count')
                     .done(function(json) {
                         var count = json;
                         resolve(count); 

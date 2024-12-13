@@ -15,6 +15,8 @@ import com.itrail.klinikreact.models.User;
 import com.itrail.klinikreact.repositories.UserRepository;
 import com.itrail.klinikreact.request.UserRequest;
 import com.itrail.klinikreact.response.UserResponse;
+import com.itrail.klinikreact.services.mail.PasswordGenerator;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
@@ -30,6 +32,7 @@ public class UserService {
  
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordGenerator passwordGenerator;
 
     @PostConstruct
     protected void init(){
@@ -184,5 +187,24 @@ public class UserService {
         return userRepository.findUserByLogin( login ).flatMap( us -> {
             return  userRepository.blockUser( login );
         }).switchIfEmpty( Mono.error(  new BadCredentialsException( "User blocking!" )));
+    }
+
+    public Mono<User> findUserByLoginOrByMail( String loginOrEmail ){
+        return userRepository.findUserByLoginOrByMail( loginOrEmail )
+            .switchIfEmpty( Mono.error( new IllegalArgumentException( "Invalid login or email, try again! ")));
+    }
+
+
+    public Mono<String> generateNewPasswordForEmail( String loginOrEmail ){
+        return findUserByLoginOrByMail(  loginOrEmail )
+            .flatMap( user ->{
+                String password = passwordGenerator.generateRandomPassword();
+                String salt = generateSalt();
+                user.setPassword( passwordEncoder.encode( secret + password + salt ));
+                user.setSalt( salt );
+                return userRepository.save( user ).flatMap( s -> {
+                    return Mono.just( password );
+                });
+            } );
     }
 }

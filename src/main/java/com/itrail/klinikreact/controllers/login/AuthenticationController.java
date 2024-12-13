@@ -3,37 +3,30 @@ package com.itrail.klinikreact.controllers.login;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.reactive.result.view.Rendering;
 import com.itrail.klinikreact.rest.login.IAuthentication;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class AuthenticationController implements IAuthentication {
 
     @PreAuthorize("hasAnyRole('0', '1')")
-    @Override
-    public Mono<String> path() {
-        return Mono.just( "redirect:/index.html");
-    }
-
-    @PreAuthorize("hasAnyRole('0', '1')")
-    public Mono<String> index() {
-        return Mono.just( "redirect:/index.html");
+    public Mono<Rendering> index() {
+        return Mono.just( Rendering.view("redirect:/index.html").build());
     }
 
     @Override
-    public Mono<String> login() {
-        return Mono.just( "login");
+    public Mono<Rendering> login() {
+        return Mono.just( Rendering.view( "login").build());
     }
 
     @Override
-    public Mono<String> error() {
-        return Mono.just( "error");
-    }
-
-    public Mono<String> changePassword() {
-        return Mono.just( "change-password");
+    public Mono<Rendering> error() {
+        return Mono.just( Rendering.view( "error").build());
     }
 
     @Override
@@ -41,19 +34,4 @@ public class AuthenticationController implements IAuthentication {
         request.getSession().removeAttribute("error");
         return Mono.just("redirect:/login"); 
     }
-
-    @Override
-    public Mono<String> requestPasswordChange( String user, HttpServletRequest request ) {
-       /**  try{
-            EmailRequest emailRequest = new EmailRequest();
-            emailRequest.setLogin( user );
-            emailRequest.setSubject("Изменение пароля");
-            emailRequest.setBody("Ваш пароль был изменен, используйте этот: ");
-            emailService.sendSimpleEmailMessage(emailRequest);;
-        }catch( Exception ex ){
-            redirectAttributes.addFlashAttribute("error", ex.getMessage() );
-        }*/
-        return Mono.just("redirect:/change-password"); 
-    }
-
 }

@@ -11,7 +11,7 @@ function lazyPatients( page, size) {
     $('table tbody').on('mousedown', 'tr', function(e) {
         $(this).addClass('highlight').siblings().removeClass('highlight');
     });
-    $.getJSON( window.location.protocol + '//'+ hostname + ':' + port +'/patients/lazy/{page}{size}?page='+page+'&size='+size, function(json) {
+    $.getJSON( window.location.protocol + '//'+ hostname + ':' + port +'/react/patients/lazy/{page}{size}?page='+page+'&size='+size, function(json) {
         var tr=[];
         $('tbody').empty();
         var startIndex = (page - 1) * size + 1;
@@ -54,7 +54,7 @@ function AddPatient() {
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
-                url: protocol + "//"+ hostname + ':' + port +  +"/patients/add?id=" + idDocument,
+                url: protocol + "//"+ hostname + ':' + port +  +"/react/patients/add?id=" + idDocument,
                 data: JSON.stringify ({surname: surname,
                                        name: name,
                                        fullName: fullName,
@@ -94,7 +94,7 @@ function findByWordPatient() {
             $.ajax({
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
-                url: window.location.protocol +"//"+ hostname +":" + port +"/patients/find/{word}",
+                url: window.location.protocol +"//"+ hostname +":" + port +"/react/patients/find/{word}",
                 data:{ word: word } ,
                 cache: false,
                 success: function( json ) {
@@ -136,7 +136,7 @@ function findByWordPatient() {
 };
 function getCountPatient() {
     return new Promise((resolve, reject) => {
-        $.getJSON(protocol + '//' + hostname + ':' + port + '/patients/count')
+        $.getJSON(protocol + '//' + hostname + ':' + port + '/react/patients/count')
             .done(function(json) {
                 var count = json;
                 resolve(count); 
