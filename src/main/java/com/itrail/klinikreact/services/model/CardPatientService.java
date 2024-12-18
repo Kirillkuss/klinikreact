@@ -2,7 +2,8 @@ package com.itrail.klinikreact.services.model;
 
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;
-import com.itrail.klinikreact.aspect.ExecuteTimeLog;
+
+import com.itrail.klinikreact.aspect.log.ExecuteTimeLog;
 import com.itrail.klinikreact.models.CardPatient;
 import com.itrail.klinikreact.repositories.CardPatientRepository;
 import com.itrail.klinikreact.repositories.TypeComplaintRepository;

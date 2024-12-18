@@ -91,11 +91,11 @@ public class AuthService {
     public Mono<Void> addBlocking(String login) {
         return userRepository.findUserByLogin(login).flatMap( user ->{
             UserBlocking userBlocking = new UserBlocking();
-            userBlocking.setDateBlock(LocalDateTime.now());
-            userBlocking.setDatePlanUnblock(LocalDateTime.now().plusMinutes( 5));
-            userBlocking.setUserId( user.getId());
-            userBlocking.setStatusBlock( 1 );
-            userBlocking.setStatus( true );
+                         userBlocking.setDateBlock(LocalDateTime.now());
+                         userBlocking.setDatePlanUnblock(LocalDateTime.now().plusMinutes( 5));
+                         userBlocking.setUserId( user.getId());
+                         userBlocking.setStatusBlock( 1 );
+                         userBlocking.setStatus( true );
             return userBlockingRepository.save(userBlocking)
                 .flatMap( userblock ->{
                     log.info( "user blocking with login:" + login);   

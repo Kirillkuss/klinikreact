@@ -3,7 +3,7 @@ package com.itrail.klinikreact.services.model;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
-import com.itrail.klinikreact.aspect.ExecuteTimeLog;
+import com.itrail.klinikreact.aspect.log.ExecuteTimeLog;
 import com.itrail.klinikreact.models.DrugTreatment;
 import com.itrail.klinikreact.models.Treatment;
 import com.itrail.klinikreact.repositories.CardPatientRepository;

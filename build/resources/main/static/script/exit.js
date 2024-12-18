@@ -28,7 +28,7 @@
             clearInterval(timerInterval);
         }
 
-        timeLeft = 90;
+        timeLeft = 10;
 
         timerInterval = setInterval(() => {
             const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');

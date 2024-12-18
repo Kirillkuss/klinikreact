@@ -1,10 +1,14 @@
 package com.itrail.klinikreact.rest.report;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.ws.rs.core.MediaType;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.itrail.klinikreact.aspect.security.SecuredControlFlux;
+import com.itrail.klinikreact.aspect.security.SecuredControlMono;
+import com.itrail.klinikreact.redis.model.UserSession;
 import com.itrail.klinikreact.request.RecordPatientRequest;
 import com.itrail.klinikreact.response.BaseError;
 import com.itrail.klinikreact.response.report.CardPatientReport;
@@ -39,8 +43,8 @@ public interface IReport {
 
     @Operation( description = "Отчет о медикаментозном лечении за период времени", summary = "Отчет о медикаментозном лечении за период времени")
     @GetMapping( "/drug-treatment/{from}{to}")
-    public Flux<DrugTreatmentReport> getStatDrugTreatment(@Parameter( description = "Дата начала выборки:", example = "2021-05-24T14:02:35.584") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
-                                                         @Parameter( description = "Дата конца выборки:", example = "2023-12-24T14:02:35.584") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to );
+    public Flux<DrugTreatmentReport> getStatDrugTreatment( @Parameter( description = "Дата начала выборки:", example = "2021-05-24T14:02:35.584") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
+                                                           @Parameter( description = "Дата конца выборки:", example = "2023-12-24T14:02:35.584") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to );
     
     @GetMapping("/info-patient/{id-card}")
     @Operation( description = "Отчет о полной информации по пациенту", summary = "Отчет о полной информации по пациенту")
@@ -49,5 +53,9 @@ public interface IReport {
     @Operation( description = "Отчет по записям пациента к врачу за период времени", summary = "Отчет по записям пациента к врачу за период времени")
     @GetMapping("/report-patient/{recordPatientRequest}")
     public Mono<RecordPatientReport> getStatRecordPatientByPatientAndTime( RecordPatientRequest recordPatientRequest ) throws Exception;
+
+
+    @GetMapping("/users/list")
+    Flux<List<UserSession>> getUsers();
     
 }

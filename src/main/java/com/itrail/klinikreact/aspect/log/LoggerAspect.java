@@ -1,4 +1,4 @@
-package com.itrail.klinikreact.aspect;
+package com.itrail.klinikreact.aspect.log;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -19,7 +19,7 @@ public class LoggerAspect {
      * @return Object
      * @throws Throwable
      */
-    @Around( value = "@annotation( com.itrail.klinikreact.aspect.ExecuteTimeLog)")
+    @Around( value = "@annotation( com.itrail.klinikreact.aspect.log.ExecuteTimeLog )")
     public Object logExecutionTime( ProceedingJoinPoint proceedingJoinPoint ) throws Throwable {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();

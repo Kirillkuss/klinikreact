@@ -1,7 +1,6 @@
 package com.itrail.klinikreact.controllers.login;
 
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.reactive.result.view.Rendering;
 import com.itrail.klinikreact.rest.login.IAuthentication;
@@ -14,7 +13,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AuthenticationController implements IAuthentication {
 
-    @PreAuthorize("hasAnyRole('0', '1')")
+    @Override
     public Mono<Rendering> index() {
         return Mono.just( Rendering.view("redirect:/index.html").build());
     }

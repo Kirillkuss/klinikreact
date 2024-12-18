@@ -14,8 +14,10 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
 @Order(-2)
 public class KlinikaReactErrorWebExceptionHandler extends AbstractErrorWebExceptionHandler {
@@ -33,10 +35,10 @@ public class KlinikaReactErrorWebExceptionHandler extends AbstractErrorWebExcept
         return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse);
     }
 
-   private Mono<ServerResponse> renderErrorResponse(final ServerRequest request) {
+    private Mono<ServerResponse> renderErrorResponse(final ServerRequest request) {
         return ServerResponse.status(HttpStatus.FOUND) 
                 .location(URI.create("/react/error"))
                 .build();
     }
-
+        
 }

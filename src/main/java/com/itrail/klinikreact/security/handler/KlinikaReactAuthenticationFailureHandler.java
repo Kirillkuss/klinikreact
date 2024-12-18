@@ -16,15 +16,14 @@ import reactor.core.publisher.Mono;
 public class KlinikaReactAuthenticationFailureHandler implements ServerAuthenticationFailureHandler {
 
     @Override
-    public Mono<Void> onAuthenticationFailure(WebFilterExchange webFilterExchange, AuthenticationException exception) {
+    public Mono<Void> onAuthenticationFailure( WebFilterExchange webFilterExchange, AuthenticationException exception ) {
         ServerWebExchange exchange = webFilterExchange.getExchange();
         return exchange.getSession().flatMap(session -> {
-            session.getAttributes().put("error", exception.getMessage());
-            String redirectUrl = UriComponentsBuilder.fromPath("/react/login")
-                    .queryParam("error", "true")
-                    .toUriString();
-            exchange.getResponse().setStatusCode(HttpStatus.FOUND);
-            exchange.getResponse().getHeaders().setLocation(URI.create(redirectUrl));
+            session.getAttributes().put("error", exception.getMessage() );
+            exchange.getResponse().setStatusCode( HttpStatus.FOUND );
+            exchange.getResponse().getHeaders().setLocation( URI.create( UriComponentsBuilder.fromPath("/react/login" )
+                                                                                             .queryParam("error", "true" )
+                                                                                             .toUriString() ));
             return exchange.getResponse().setComplete();
         });
     }

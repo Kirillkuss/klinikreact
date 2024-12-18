@@ -31,11 +31,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	//implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.session:spring-session-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
     //implementation 'org.thymeleaf:thymeleaf-spring5'
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation group: 'org.springframework.security', name: 'spring-security-web',
 	//implementation group: 'io.r2dbc', name: 'r2dbc-postgresql', version: '0.8.11.RELEASE'
 	implementation("io.r2dbc:r2dbc-postgresql:0.8.13.RELEASE")
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-webflux-ui', version: '1.6.14'

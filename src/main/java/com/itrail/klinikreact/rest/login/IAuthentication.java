@@ -3,6 +3,7 @@ package com.itrail.klinikreact.rest.login;
 import reactor.core.publisher.Mono;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.reactive.result.view.Rendering;
@@ -10,6 +11,7 @@ import org.springframework.web.reactive.result.view.Rendering;
 public interface IAuthentication {
 
     @GetMapping(value = "/index")
+    @PreAuthorize("hasAnyRole('0', '1')")
     public Mono<Rendering> index();
 
     @GetMapping(value = "/login")

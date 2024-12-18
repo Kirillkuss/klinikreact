@@ -32,5 +32,10 @@ public class KlinikaReactExceptionHandler extends ResponseEntityExceptionHandler
     public Mono<BaseError> errBaseResponse( BadCredentialsException ex ){
         return Mono.just( new BaseError( 404, ex.getMessage() ));
     }
+
+    @ExceptionHandler(SecurityException.class)
+    public Mono<BaseError> errBaseResponse( SecurityException ex ){
+        return Mono.just( new BaseError( 403, ex.getMessage() ));
+    }
     
 }

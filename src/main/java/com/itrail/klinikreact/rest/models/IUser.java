@@ -1,6 +1,8 @@
 package com.itrail.klinikreact.rest.models;
 
 import javax.ws.rs.core.MediaType;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,10 +30,12 @@ public interface IUser {
 
     @RequestMapping( method = RequestMethod.GET )
     @Operation( description = "List users", summary = " List Users ")
+    @PreAuthorize("hasAnyRole('0', '1')")
     public Flux<UserResponse> getUsers();
 
     @RequestMapping(method = RequestMethod.POST)
     @Operation( description = "Добавить user", summary = "Добавить user")
+    @PreAuthorize("hasAnyRole('0', '1')")
     public Mono<UserResponse>  addUser( @RequestBody UserRequest userRequest);
     
 }

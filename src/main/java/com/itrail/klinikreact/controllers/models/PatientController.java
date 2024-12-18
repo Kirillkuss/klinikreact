@@ -1,7 +1,7 @@
 package com.itrail.klinikreact.controllers.models;
 
 import org.springframework.web.bind.annotation.RestController;
-import com.itrail.klinikreact.aspect.ExecuteTimeLog;
+import com.itrail.klinikreact.aspect.log.ExecuteTimeLog;
 import com.itrail.klinikreact.repositories.PatientRepository;
 import com.itrail.klinikreact.request.PatientRequest;
 import com.itrail.klinikreact.response.PatientResponse;

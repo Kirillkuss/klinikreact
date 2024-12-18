@@ -1,4 +1,4 @@
-package com.itrail.klinikreact.aspect;
+package com.itrail.klinikreact.aspect.log;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
