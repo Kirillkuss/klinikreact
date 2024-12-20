@@ -23,7 +23,7 @@ public class KlinikaReactLogoutSuccessHandler implements ServerLogoutSuccessHand
     public Mono<Void> onLogoutSuccess( WebFilterExchange webFilterExchange, Authentication authentication ) {
         ServerWebExchange exchange = webFilterExchange.getExchange();
         userSessionRepository.deleteById( authentication.getName());
-       // log.info( "Delete session for user: " + authentication.getName() );
+        log.info( "Delete session for user: " + authentication.getName() );
         exchange.getResponse().setStatusCode(HttpStatus.FOUND);
         exchange.getResponse().getHeaders().setLocation(URI.create("/react/login")); 
         return exchange.getResponse().setComplete();

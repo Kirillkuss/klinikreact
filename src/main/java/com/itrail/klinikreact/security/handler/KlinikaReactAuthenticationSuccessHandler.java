@@ -50,7 +50,7 @@ public class KlinikaReactAuthenticationSuccessHandler implements ServerAuthentic
         return exchange.getSession().flatMap( session -> {
             return Mono.defer( () -> {
                 if( userSessionRepository.findById(  authentication.getName() ).isEmpty()){
-                    userSessionRepository.save( new UserSession( authentication.getName(), session.getId(), 20 ));
+                    userSessionRepository.save( new UserSession( authentication.getName(), session.getId(), 60 ));
                     log.info("SAVE session -> " + session.getId() );
                     return exchange.getResponse().setComplete();
                  }else{
