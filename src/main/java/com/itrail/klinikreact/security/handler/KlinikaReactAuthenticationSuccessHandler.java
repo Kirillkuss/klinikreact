@@ -1,18 +1,17 @@
 package com.itrail.klinikreact.security.handler;
  
 import java.net.URI;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
-
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-
 import com.itrail.klinikreact.redis.model.UserSession;
 import com.itrail.klinikreact.redis.repository.UserSessionRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +30,7 @@ public class KlinikaReactAuthenticationSuccessHandler implements ServerAuthentic
         /**
          * Delete all session users
          */
+        log.info(" Delete all session! ");
         userSessionRepository.deleteAll();
     }
 
@@ -42,19 +42,16 @@ public class KlinikaReactAuthenticationSuccessHandler implements ServerAuthentic
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
                 .orElse("");
-        String redirectUrl;
-        if ( role.equals("ROLE_2" )) {
-            redirectUrl = "/react/webjars/swagger-ui/index.html";
-        } else {
-            redirectUrl = "/react/index";
-        }
+
+        String redirectUrl = role.equals("ROLE_2") ? "/react/webjars/swagger-ui/index.html" : "/react/index";
+
         exchange.getResponse().setStatusCode( HttpStatus.FOUND ); 
         exchange.getResponse().getHeaders().setLocation( URI.create( redirectUrl ));
         return exchange.getSession().flatMap( session -> {
             return Mono.defer( () -> {
                 if( userSessionRepository.findById(  authentication.getName() ).isEmpty()){
-                    //log.info( "Save session for user:  " + authentication.getName() );
-                    userSessionRepository.save( new UserSession( authentication.getName(), session.getId(), 600 ));
+                    userSessionRepository.save( new UserSession( authentication.getName(), session.getId(), 20 ));
+                    log.info("SAVE session -> " + session.getId() );
                     return exchange.getResponse().setComplete();
                  }else{
                     exchange.getResponse().setStatusCode( HttpStatus.FOUND );
@@ -64,6 +61,5 @@ public class KlinikaReactAuthenticationSuccessHandler implements ServerAuthentic
             });
         });
     }
-
 
 }
