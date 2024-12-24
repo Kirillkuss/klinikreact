@@ -1,0 +1,57 @@
+# 1. App
+# 2. Redis
+# 3. Postgres
+version: '3.4'
+
+volumes:
+  pg_project:
+
+services:
+# Redis
+  redisreact:
+    image: redis:latest
+    container_name: redisreact
+    ports:
+      - "6379:6379"
+    networks:
+      - klinikreact-es
+# App      
+  klinikreact:
+    image: klinikreact
+    ports:
+      - "8086:8086"
+    build:
+      context: .
+    container_name: klinikreact
+    depends_on:
+      - postgres_db_react
+    environment:
+      - SPRING_R2DBC_URL=r2dbc:postgresql://host.docker.internal:5434/Klinika
+      - SPRING_R2DBC_USERNAME=postgres
+      - SPRING_R2DBC_PASSWORD=admin
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+    volumes:
+      - ./src/main/resources/keys:/app/keys
+      - ./src/main/resources/keystore:/app/keystore
+    links:
+     - redisreact
+    networks:
+     - klinikreact-es
+# Postgres ( empty db )
+  postgres_db_react:
+    image: postgres
+    container_name: postgres_db_react
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=Klinika
+    volumes:
+      - ./src/main/resources/db/init_db.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./src/main/resources/db/function.sql:/docker-entrypoint-initdb.d/function.sql
+    ports:
+      - ${POSTGRES_PORT:-5434}:5432
+    networks:
+     - klinikreact-es
+# Network
+networks:
+  klinikreact-es:

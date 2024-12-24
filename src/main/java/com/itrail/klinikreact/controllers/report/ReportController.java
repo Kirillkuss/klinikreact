@@ -55,6 +55,5 @@ public class ReportController implements IReport {
         List<UserSession> response = new ArrayList<>();
         userSessionRepository.findAll().iterator().forEachRemaining( response::add );
         return Flux.just( response );
-    }
-    
+    } 
 }

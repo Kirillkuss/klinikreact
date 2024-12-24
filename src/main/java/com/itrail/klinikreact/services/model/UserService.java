@@ -35,17 +35,17 @@ public class UserService {
     protected void init(){
         String salt = generateSalt();
         User user = new User();
-                                user.setLogin("user");
-                                user.setPassword(passwordEncoder.encode( secret + "dkjfRk4$451sfdf" + salt ));
-                                user.setPassword("user");
-                                user.setRole("2");
-                                user.setEmail( "User@mail.com");
-                                user.setSalt( salt );
-                                user.setStatus( false );
-                                //addUser(  user ).subscribe( r -> log.info( r.toString() ));
-            //userRepository.findById(33L ).subscribe( us -> log.info( us.toString()));
-            //log.info( "init main user");
-           // userRepository.blockUser( "admin");
+             user.setLogin("admin");
+             user.setPassword(passwordEncoder.encode( secret + "admin" + salt ));
+             user.setRole("0");
+             user.setEmail( "Admin@mail.com");
+             user.setSalt( salt );
+             user.setStatus( false );
+        userRepository.findUserByLogin( user.getLogin() )
+                      .switchIfEmpty( Mono.defer( () -> {
+                            log.info( "Add Admin !!!");
+                            return userRepository.save( user );
+                      })).subscribe();
     }
 
     public Flux<UserResponse> getUsers() {

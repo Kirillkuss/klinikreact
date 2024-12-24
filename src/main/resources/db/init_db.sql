@@ -68,7 +68,7 @@ CREATE TABLE Treatment (
 	FOREIGN KEY (rehabilitation_solution_id) REFERENCES public.Rehabilitation_solution(id_rehabilitation_solution),
 	FOREIGN KEY (doctor_id) REFERENCES public.Doctor(id_doctor),
     FOREIGN KEY (card_patient_id) REFERENCES public.Card_patient(id_card_patient),
-    FOREIGN KEY (drug_id) REFERENCES public.Drug(id_dr)
+    FOREIGN KEY (drug_id) REFERENCES public.Drug(id_drug)
 );
 
 CREATE TABLE Record_patient(
