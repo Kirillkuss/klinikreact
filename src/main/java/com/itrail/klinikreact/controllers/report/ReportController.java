@@ -16,15 +16,19 @@ import com.itrail.klinikreact.response.report.RehabilitationSolutionReport;
 import com.itrail.klinikreact.rest.report.IReport;
 import com.itrail.klinikreact.services.report.ReportService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ReportController implements IReport {
 
     private final ReportService reportService;
     private final UserSessionRepository userSessionRepository;
+    private final ReactiveRedisTemplate<String, UserSession> reactiveRedisTemplate;
 
     @Override
     @SecuredControlFlux(roles = {"ROLE_1", "ROLE_0"})
@@ -56,4 +60,13 @@ public class ReportController implements IReport {
         userSessionRepository.findAll().iterator().forEachRemaining( response::add );
         return Flux.just( response );
     } 
+
+    /**@GetMapping("/session")
+    public Flux<UserSession> getSession(){
+        System.out.println( "\n");
+        return reactiveRedisTemplate.keys( "*").flatMap( keys ->{
+            log.info( "key: " + keys);
+            return Flux.empty();
+        });
+    }*/
 }

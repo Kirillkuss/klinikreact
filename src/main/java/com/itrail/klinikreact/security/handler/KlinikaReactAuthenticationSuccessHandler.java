@@ -1,9 +1,8 @@
 package com.itrail.klinikreact.security.handler;
  
 import java.net.URI;
-import java.util.UUID;
-
 import javax.annotation.PostConstruct;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
@@ -24,6 +23,7 @@ import reactor.core.publisher.Mono;
 public class KlinikaReactAuthenticationSuccessHandler implements ServerAuthenticationSuccessHandler{
 
     private final UserSessionRepository userSessionRepository;
+    private final ReactiveRedisTemplate<String, UserSession> reactiveRedisTemplate;
 
     @PostConstruct
     public void init(){
@@ -32,30 +32,33 @@ public class KlinikaReactAuthenticationSuccessHandler implements ServerAuthentic
          */
         log.info(" Delete all session! ");
         userSessionRepository.deleteAll();
+        reactiveRedisTemplate.keys("*").flatMap( keys -> {
+            return reactiveRedisTemplate.delete( keys );
+        }).subscribe();
     }
 
     @Override
     public Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange, Authentication authentication) {
         ServerWebExchange exchange = webFilterExchange.getExchange();
-        exchange.getAttributes().remove("error");
-        String role = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst()
-                .orElse("");
-
+                          exchange.getAttributes().remove("error");
+        String role = authentication.getAuthorities()
+                                    .stream()
+                                    .map(GrantedAuthority::getAuthority)
+                                    .findFirst()
+                                    .orElse("");
         String redirectUrl = role.equals("ROLE_2") ? "/react/webjars/swagger-ui/index.html" : "/react/index";
-
-        exchange.getResponse().setStatusCode( HttpStatus.FOUND ); 
-        exchange.getResponse().getHeaders().setLocation( URI.create( redirectUrl ));
+                          exchange.getResponse().setStatusCode( HttpStatus.FOUND ); 
+                          exchange.getResponse().getHeaders().setLocation( URI.create( redirectUrl ));
         return exchange.getSession().flatMap( session -> {
             return Mono.defer( () -> {
                 if( userSessionRepository.findById(  authentication.getName() ).isEmpty()){
-                    userSessionRepository.save( new UserSession( authentication.getName(), session.getId(), 60 ));
-                    log.info("SAVE session -> " + session.getId() );
+                    userSessionRepository.save( new UserSession( authentication.getName(), session.getId(), 300 ));
+                    //log.info("SAVE session -> " + session.getId() );
                     return exchange.getResponse().setComplete();
                  }else{
-                    exchange.getResponse().setStatusCode( HttpStatus.FOUND );
-                    exchange.getResponse().getHeaders().setLocation( URI.create( "/react/finish-session" ));
+                           exchange.getResponse().getCookies().add( "authentication", ResponseCookie.from( "name", authentication.getName() ).build());
+                           exchange.getResponse().setStatusCode( HttpStatus.FOUND );
+                           exchange.getResponse().getHeaders().setLocation( URI.create( "/react/finish-session" ));
                     return exchange.getResponse().setComplete();
                  }
             });

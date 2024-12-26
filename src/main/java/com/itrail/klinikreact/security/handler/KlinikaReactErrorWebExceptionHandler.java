@@ -23,8 +23,8 @@ import reactor.core.publisher.Mono;
 public class KlinikaReactErrorWebExceptionHandler extends AbstractErrorWebExceptionHandler {
 
     public KlinikaReactErrorWebExceptionHandler( KlinikaReactErrorAttributes klinikaReactErrorAttributes,
-                                           ApplicationContext applicationContext,
-                                           ServerCodecConfigurer serverCodecConfigurer) {
+                                                 ApplicationContext applicationContext,
+                                                 ServerCodecConfigurer serverCodecConfigurer) {
         super( klinikaReactErrorAttributes, new WebProperties.Resources(), applicationContext);
         super.setMessageWriters( serverCodecConfigurer.getWriters());
         super.setMessageReaders( serverCodecConfigurer.getReaders());

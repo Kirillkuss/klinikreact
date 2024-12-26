@@ -23,7 +23,7 @@ public class UserSession {
     private String sessionId;
     
     @TimeToLive
-    @Schema( example = "60")
+    @Schema( example = "300")
     private Integer time;
 
     
