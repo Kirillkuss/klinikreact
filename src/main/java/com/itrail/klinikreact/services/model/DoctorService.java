@@ -1,7 +1,6 @@
 package com.itrail.klinikreact.services.model;
 
 import java.util.NoSuchElementException;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.itrail.klinikreact.models.Doctor;
 import com.itrail.klinikreact.repositories.DoctorRepository;
@@ -17,7 +16,6 @@ public class DoctorService {
     
     private final DoctorRepository doctorRepository;
 
-    @Cacheable("getLazyDoctors") 
     public Flux<Doctor> getLazyDoctors( int page, int size ){
         long startTime = System.currentTimeMillis();
         Flux<Doctor> reponse = doctorRepository.findAll()

@@ -13,6 +13,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.RedisKeyValueAdapter;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
@@ -24,7 +25,8 @@ import com.itrail.klinikreact.redis.model.UserSession;
 @EnableCaching
 @ComponentScan("com.itrail.klinikreact.redis")
 @PropertySource(value = { "classpath:redis.properties" })
-@EnableRedisRepositories( basePackages = "com.itrail.klinikreact.redis.repository")
+@EnableRedisRepositories( basePackages = "com.itrail.klinikreact.redis.repository",
+                          enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP)
 public class RedisConfig {
 
     @Autowired

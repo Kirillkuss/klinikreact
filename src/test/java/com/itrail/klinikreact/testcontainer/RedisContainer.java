@@ -25,8 +25,8 @@ public class RedisContainer {
     @SuppressWarnings("resource")
     @Container
     private static GenericContainer<?> redisContainer = new GenericContainer<>("redis:latest")
-            .withExposedPorts(6379);
-            //.withCreateContainerCmdModifier(cmd -> cmd.withName("redis_test"));
+            .withExposedPorts(6379)
+            .withCreateContainerCmdModifier(cmd -> cmd.withName("redis_test"));
 
     @BeforeAll
     public static void setUpClass() throws Exception {
@@ -56,7 +56,6 @@ public class RedisContainer {
 
     @Test
     public void testFirst() {
-        
         System.out.println("Test is running");
     }
     
