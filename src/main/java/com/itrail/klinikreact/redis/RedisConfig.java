@@ -1,7 +1,6 @@
 package com.itrail.klinikreact.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +18,16 @@ import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import com.itrail.klinikreact.redis.model.UserSession;
+import org.springframework.data.redis.core.RedisKeyValueAdapter.EnableKeyspaceEvents;
 
 @Configuration
-@EnableCaching
 @ComponentScan("com.itrail.klinikreact.redis")
 @PropertySource(value = { "classpath:redis.properties" })
-@EnableRedisRepositories( basePackages = "com.itrail.klinikreact.redis.repository")
+//enableKeyspaceEvents = EnableKeyspaceEvents.ON_STARTUP or  enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP for @EventListener
+/**@EnableRedisRepositories( basePackages = "com.itrail.klinikreact.redis.repository",
+                          enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP)*/
+@EnableRedisRepositories( basePackages = "com.itrail.klinikreact.redis.repository",
+                          enableKeyspaceEvents = EnableKeyspaceEvents.ON_STARTUP)
 public class RedisConfig {
 
     @Autowired

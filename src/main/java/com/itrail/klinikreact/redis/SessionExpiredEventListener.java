@@ -3,14 +3,11 @@ package com.itrail.klinikreact.redis;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.RedisKeyExpiredEvent;
-import org.springframework.data.redis.core.RedisKeyValueAdapter.EnableKeyspaceEvents;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import com.itrail.klinikreact.redis.model.UserSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@EnableRedisRepositories(enableKeyspaceEvents = EnableKeyspaceEvents.ON_STARTUP)
 @Configuration
 @RequiredArgsConstructor
 public class SessionExpiredEventListener {
