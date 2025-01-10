@@ -1,7 +1,5 @@
 package com.itrail.klinikreact.testcontainer;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
@@ -24,7 +22,9 @@ import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import io.r2dbc.spi.ConnectionFactory;
 import reactor.core.publisher.Flux;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+/**
+ * Для запуска должен быть запущен Redis
+ */
 @Disabled
 @Testcontainers
 @SpringBootTest
@@ -33,10 +33,11 @@ public class PostgresContainerBackUp {
 
     @SuppressWarnings("resource")
     @Container
-    private static PostgreSQLContainer<?> postgresSQLContainer = new PostgreSQLContainer<>("postgres:latest")
-                                                                        .withDatabaseName("Klinika")
-                                                                        .withUsername("postgres")
-                                                                        .withPassword("admin");
+    private static PostgreSQLContainer<?> postgresSQLContainer = new PostgreSQLContainer<>("postgres:latest" )
+                                                                        .withDatabaseName("Klinika" )
+                                                                        .withUsername("postgres" )
+                                                                        .withPassword("admin" )
+                                                                        .withCreateContainerCmdModifier(cmd -> cmd.withName("postgres_test" ));
 
     private final List<Document> listOne = new ArrayList<>();
     private final List<Document> listTwo = new ArrayList<>();
@@ -45,7 +46,7 @@ public class PostgresContainerBackUp {
     public static void setUpClass() throws Exception{
         postgresSQLContainer.start();
         //загрузка backup
-        getRestoreDataBase( postgresSQLContainer.getMappedPort( PostgreSQLContainer.POSTGRESQL_PORT ));
+        BackupPostgres.getRestoreDataBase( postgresSQLContainer.getMappedPort( PostgreSQLContainer.POSTGRESQL_PORT ));
     }
 
     @Autowired private DocumentService documentService;
@@ -107,34 +108,5 @@ public class PostgresContainerBackUp {
                         }).blockLast();
         assertEquals( listOne, listTwo );
     }
-
-    @DisplayName("Загрузка данных в бд")
-    public static void getRestoreDataBase( int port ) throws Exception {
-        List<String> restore = List.of("pg_restore", "--host=localhost", "--port=" + port,"--username=postgres",
-                                       "--dbname=Klinika",  "--no-password","--format=c","--verbose",
-                                          "./src/main/resources/db/backup/klinika.backup");
-        processBuilder( restore );
-    }
-    
-    @DisplayName("Загрузка данных")
-    private static void processBuilder( List<String>  commnds ) throws Exception{
-        ProcessBuilder processBuilder = new ProcessBuilder( commnds );
-        processBuilder.environment().put("PGPASSWORD", "admin");
-        processBuilder.redirectErrorStream(true);
-        Process process = processBuilder.start();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        }
-        int exitCode = process.waitFor();
-        if (exitCode == 0) {
-            System.out.println("Restore Db success!");
-        } else {   
-            System.out.println("Code >>> " + exitCode);
-        }
-
-    }
-    
+   
 }

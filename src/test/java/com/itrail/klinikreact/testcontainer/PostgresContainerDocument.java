@@ -31,7 +31,9 @@ import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import io.r2dbc.spi.ConnectionFactory;
 import reactor.core.publisher.Flux;
-
+/**
+ * Должен быть запущен Redis
+ */
 @Disabled
 @Testcontainers
 @SpringBootTest
@@ -43,7 +45,8 @@ public class PostgresContainerDocument {
     private static PostgreSQLContainer<?> postgresSQLContainer = new PostgreSQLContainer<>("postgres:latest")
                                                                         .withDatabaseName("Klinika")
                                                                         .withUsername("postgres")
-                                                                        .withPassword("admin");
+                                                                        .withPassword("admin")
+                                                                        .withCreateContainerCmdModifier(cmd -> cmd.withName("postgres_test"));
 
     private final List<Document> listOne = new ArrayList<>();
     private final List<Document> listTwo = new ArrayList<>();
@@ -97,7 +100,7 @@ public class PostgresContainerDocument {
     @Order(1)
     @DisplayName("Добавление документа")
     public void testAddDocument(){
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             documentService.addDocument(getDocument()).block();
         }
     }
