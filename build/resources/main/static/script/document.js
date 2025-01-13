@@ -144,60 +144,72 @@ function AddDocument() {
      */
     async function switchTable() {
         let totalDocuments = await getCountDocuments();
-        i = 2;
-        $('#currentPage').text(1);
-        $(document.getElementById("Previous")).on( "click",function(){
-            if( i < 2 ){
-                i = 1;
-            }else{
-                i--;
+        let documentsPerPage = 15;
+        let totalPages = Math.ceil(totalDocuments / documentsPerPage);
+        let currentPage = 1;
+        $('#currentPage').text(currentPage);
+        updatePageNumbers(); 
+
+        function updatePage() {
+            $('tbody:even').empty();
+            lazyDocument(currentPage, documentsPerPage);
+            $('#currentPage').text(currentPage);
+            updatePageNumbers(); 
+        }
+
+        function updatePageNumbers() {
+            $('#pageNumbers').empty(); 
+            let pageNumbers = [];
+            pageNumbers.push(1);
+            pageNumbers.push('...');
+            
+            if ( currentPage === (totalPages - 1) ){
+                pageNumbers.push( currentPage - 2 );
             }
-            $('#currentPage').text(i);
-            $('tbody:even').empty();
-            lazyDocument(i, 15);
-        });
-
-        $(document.getElementById("Next")).on( "click",function(){
-            if( document.querySelectorAll('#tableDocument tbody tr').length < 15 ){
-                i;
-            }else{
-                i++;
+            if (totalPages > 4) {
+                for ( let page = Math.max( 2, currentPage - 1 ); page <= Math.min( currentPage + 1, totalPages - 1 ); page++ ) {
+                   if( currentPage === totalPages){
+                        pageNumbers.push( currentPage - 3 );
+                        pageNumbers.push( currentPage - 2 );
+                   }
+                    pageNumbers.push(page);
+                    if( (totalPages - 1) === page ){
+                        pageNumbers.push('...');
+                    }
+                    if( currentPage === 1){
+                        pageNumbers.push(currentPage + 2 );
+                        pageNumbers.push(currentPage + 3 );
+                    }
+                }
+                if( currentPage === 2){
+                    pageNumbers.push(currentPage + 2 );
+                }
+                if (currentPage < totalPages - 2) {
+                    pageNumbers.push('...');
+                }
+                pageNumbers.push(totalPages);
+            } else {
+                for (let page = 2; page <= totalPages; page++) {
+                    pageNumbers.push(page);
+                }
             }
-            $('#currentPage').text(i);
-            $('tbody:even').empty();
-            lazyDocument(i, 15);
-        });
-
-        $(document.getElementById("first")).on( "click",function(){
-            i = 1;
-            $('#currentPage').text(i);
-            $('tbody:even').empty();
-            lazyDocument(i, 15);
-        });
-
-        $(document.getElementById("second")).on( "click",function(){
-            i = 2;
-            $('#currentPage').text(i);
-            $('tbody:even').empty();
-            lazyDocument(i, 15);
-        });
-
-        $(document.getElementById("third")).on( "click",function(){
-            i = 3;
-            $('#currentPage').text(i);
-            $('tbody:even').empty();
-            lazyDocument(i, 15);
-        });
-                
-        $(document.getElementById("last")).on("click", function() {
-            $('tbody:even').empty();
-            i  = Math.ceil(totalDocuments / 15);
-            $('#currentPage').text(i);
-            lazyDocument(i, 15);
-        });
+    
+            for (const page of pageNumbers) {
+                $('#pageNumbers').append(
+                    `<a class="btn btn-outline-dark page-btn" href="#" data-page="${page}">${page}</a>`
+                );
+            }
+    
+            $('.page-btn').on("click", function () {
+                let pageNum = $(this).data("page");
+                if (pageNum !== "...") {
+                    currentPage = parseInt(pageNum);
+                    updatePage();
+                }
+            });
+        }
+        await updatePage();
     }
-
-
     
 
     function listEM() {

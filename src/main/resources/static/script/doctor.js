@@ -116,57 +116,75 @@ function AddDoctor() {
         }
 
         async function switchTable() {
-            let totalDoctors = await getCountDoctor();
-            let i = 2;
-            $('#currentPage').text(1); 
-            $(document.getElementById("PreviousDoctor")).on("click", function() {
-                if (i < 2) {
-                    i = 1;
-                } else {
-                    i--;
+            let totalDoctor = await getCountDoctor();
+            let doctorPerPage = 15;
+            let totalPages = Math.ceil(totalDoctor / doctorPerPage);
+            let currentPage = 1;
+        
+            $('#currentPage').text(currentPage);
+            updatePageNumbers();
+        
+            $(document.getElementById("Previous")).on("click", function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePage();
                 }
-                $('#currentPage').text(i);
-                $('tbody:even').empty();
-                lazyDoctors(i, 15);
             });
         
-            $(document.getElementById("NextDoctor")).on("click", function() {
-                if (document.querySelectorAll('#tableDoctor tbody tr').length < 15) {
-                } else {
-                    i++;
+            $(document.getElementById("Next")).on("click", function () {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePage();
                 }
-                $('#currentPage').text(i);
-                $('tbody:even').empty();
-                lazyDoctors(i, 15);
             });
         
-            $(document.getElementById("firstDoctor")).on("click", function() {
-                i = 1;
-                $('#currentPage').text(i);
-                $('tbody:even').empty();
-                lazyDoctors(i, 15);
+            $(document.getElementById("last")).on("click", function () {
+                currentPage = totalPages;
+                updatePage();
             });
         
-            $(document.getElementById("secondDoctor")).on("click", function() {
-                i = 2;
-                $('#currentPage').text(i);
+            function updatePage() {
                 $('tbody:even').empty();
-                lazyDoctors(i, 15);
-            });
+                $('#currentPage').text(currentPage);
+                lazyDoctors(currentPage, doctorPerPage);
+                updatePageNumbers();
+            }
         
-            $(document.getElementById("thirdDoctor")).on("click", function() {
-                i = 3;
-                $('#currentPage').text(i);
-                $('tbody:even').empty();
-                lazyDoctors(i, 15);
-            });
+            function updatePageNumbers() {
+                $('#pageNumbers').empty();
+                let pageNumbers = [];
         
-            $(document.getElementById("lastDoctor")).on("click", function() {
-                $('tbody:even').empty();
-                i  = Math.ceil(totalDoctors / 15);
-                $('#currentPage').text(i);
-                lazyDoctors(i, 15);
-            });
+                if (totalPages <= 3) {
+                    for (let page = 1; page <= totalPages; page++) {
+                        pageNumbers.push(page);
+                    }
+                } else {
+                    if (currentPage > 2) {
+                        pageNumbers.push(1);
+                        if (currentPage > 3) pageNumbers.push('...'); 
+                    }
+                    if (currentPage - 1 > 0) pageNumbers.push(currentPage - 1);
+                    pageNumbers.push(currentPage);
+                    if (currentPage + 1 <= totalPages) pageNumbers.push(currentPage + 1);
+                    if (currentPage < totalPages - 1) {
+                        if (currentPage < totalPages - 2) pageNumbers.push('...'); 
+                        pageNumbers.push(totalPages);
+                    }
+                }
+                for (const page of pageNumbers) {
+                    $('#pageNumbers').append(
+                        `<a class="btn btn-outline-dark page-btn" href="#" data-page="${page}">${page}</a>`
+                    );
+                }
+                $('.page-btn').on("click", function () {
+                    let pageNum = $(this).data("page");
+                    if (pageNum !== "...") {
+                        currentPage = parseInt(pageNum);
+                        updatePage();
+                    }
+                });
+            }
+            await updatePage();
         }
 
 

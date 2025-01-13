@@ -139,59 +139,76 @@ function getCountCard() {
 /**
  * Нумерация страниц
  */
-async function switchTable(){
-    let totalCard = await getCountCard();
-    i = 2;
-    $('#currentPage').text(1);
-    $(document.getElementById("PreviousCard")).on( "click",function(){
-        if( i < 2 ){
-            i = 1;
-        }else{
-            i--;
+async function switchTable() {
+    let totalcards = await getCountCard();
+    let cardsPerPage = 9;
+    let totalPages = Math.ceil(totalcards / cardsPerPage);
+    let currentPage = 1;
+
+    $('#currentPage').text(currentPage);
+    updatePageNumbers();
+
+    $(document.getElementById("Previous")).on("click", function () {
+        if (currentPage > 1) {
+            currentPage--;
+            updatePage();
         }
-        $('#currentPage').text(i);
-        $('tbody:even').empty();
-        lazyCard(i, 9);
     });
 
-    $(document.getElementById("NextCard")).on( "click",function(){
-        if( document.querySelectorAll('#tableCard tbody tr').length < 9 ){
-            i;
-        }else{
-            i++;
+    $(document.getElementById("Next")).on("click", function () {
+        if (currentPage < totalPages) {
+            currentPage++;
+            updatePage();
         }
-        $('#currentPage').text(i);
-        $('tbody:even').empty();
-        lazyCard(i, 9);
     });
 
-    $(document.getElementById("FirstCard")).on( "click",function(){
-        i = 1;
-        $('tbody:even').empty();
-        $('#currentPage').text(i);
-        lazyCard(i, 9);
+    $(document.getElementById("last")).on("click", function () {
+        currentPage = totalPages;
+        updatePage();
     });
 
-    $(document.getElementById("SecondCard")).on( "click",function(){
-        i = 2;
+    function updatePage() {
         $('tbody:even').empty();
-        $('#currentPage').text(i);
-        lazyCard(i, 9);
-    });
+        $('#currentPage').text(currentPage);
+        lazyCard(currentPage, cardsPerPage);
+        updatePageNumbers();
+    }
 
-    $(document.getElementById("ThirdCard")).on( "click",function(){
-        i = 3;
-        $('tbody:even').empty();
-        $('#currentPage').text(i);
-        lazyCard(i, 9);
-    });
+    function updatePageNumbers() {
+        $('#pageNumbers').empty();
+        let pageNumbers = [];
 
-    $(document.getElementById("LastCard")).on("click", function() {
-        $('tbody:even').empty();
-        i  = Math.ceil(totalCard / 9);
-        $('#currentPage').text(i);
-        lazyCard(i, 9);
-    });
+        if (totalPages <= 3) {
+            for (let page = 1; page <= totalPages; page++) {
+                pageNumbers.push(page);
+            }
+        } else {
+            if (currentPage > 2) {
+                pageNumbers.push(1);
+                if (currentPage > 3) pageNumbers.push('...'); 
+            }
+            if (currentPage - 1 > 0) pageNumbers.push(currentPage - 1);
+            pageNumbers.push(currentPage);
+            if (currentPage + 1 <= totalPages) pageNumbers.push(currentPage + 1);
+            if (currentPage < totalPages - 1) {
+                if (currentPage < totalPages - 2) pageNumbers.push('...'); 
+                pageNumbers.push(totalPages);
+            }
+        }
+        for (const page of pageNumbers) {
+            $('#pageNumbers').append(
+                `<a class="btn btn-outline-dark page-btn" href="#" data-page="${page}">${page}</a>`
+            );
+        }
+        $('.page-btn').on("click", function () {
+            let pageNum = $(this).data("page");
+            if (pageNum !== "...") {
+                currentPage = parseInt(pageNum);
+                updatePage();
+            }
+        });
+    }
+    await updatePage();
 }
 
 /**
