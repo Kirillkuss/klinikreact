@@ -14,7 +14,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - klinikreact-es
+      - klinikreact_klinikreact-es
 # App      
   klinikreact:
     image: klinikreact
@@ -36,7 +36,7 @@ services:
     links:
      - redisreact
     networks:
-     - klinikreact-es
+     - klinikreact_klinikreact-es
 # Postgres ( backup )
   postgres_db_react:
     image: postgres
@@ -51,7 +51,7 @@ services:
     ports:
       - ${POSTGRES_PORT:-5434}:5432
     networks:
-     - klinikreact-es
+     - klinikreact_klinikreact-es
 # Network
 networks:
-  klinikreact-es:
+  klinikreact_klinikreact-es:

@@ -13,7 +13,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - klinikreact-es
+      - klinikreact_klinikreact-es
 # App      
   klinikreact:
     image: klinikreact
@@ -33,7 +33,7 @@ services:
     links:
      - redisreact
     networks:
-     - klinikreact-es
+     - klinikreact_klinikreact-es
 # Network
 networks:
-  klinikreact-es:
+  klinikreact_klinikreact-es:

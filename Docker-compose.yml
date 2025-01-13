@@ -13,18 +13,13 @@ services:
     build:
       context: .
     container_name: klinikreact
-    environment:
-      - SPRING_R2DBC_URL=r2dbc:postgresql://host.docker.internal:5432/Klinika
-      - SPRING_R2DBC_USERNAME=postgres
-      - SPRING_R2DBC_PASSWORD=admin
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
     volumes:
       - ./src/main/resources/keys:/app/keys
       - ./src/main/resources/keystore:/app/keystore
     networks:
-     - klinik_klinika-es
+     - klinikreact_klinikreact-es
 
 #Add container to network another project
 networks:
-  klinik_klinika-es:
+  klinikreact_klinikreact-es:
     external: true

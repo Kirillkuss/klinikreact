@@ -14,3 +14,4 @@
 10. **DevTools**
 11. **Redis**
 12. **Docker** ( App, Redis, Postgres ( backup ))
+13. **Test** ( Testcontainers, RestAssured, Intagrations tests, module tests )
