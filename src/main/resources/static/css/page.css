@@ -19,4 +19,9 @@ table, th, td, tr {
 .table-container {
     max-height: 670px; /* Фиксированная высота контейнера */
     overflow: auto; /* Добавление полос прокрутки при необходимости */
-}	
+}
+/* кнопки для пагинации страниц */
+.page-btn {
+    width: 70px;
+    height: 40px; 
+}

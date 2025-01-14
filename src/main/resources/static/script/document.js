@@ -161,7 +161,6 @@ function AddDocument() {
             $('#pageNumbers').empty(); 
             let pageNumbers = [];
             pageNumbers.push(1);
-            pageNumbers.push('...');
             
             if ( currentPage === (totalPages - 1) ){
                 pageNumbers.push( currentPage - 2 );
@@ -174,7 +173,6 @@ function AddDocument() {
                    }
                     pageNumbers.push(page);
                     if( (totalPages - 1) === page ){
-                        pageNumbers.push('...');
                     }
                     if( currentPage === 1){
                         pageNumbers.push(currentPage + 2 );
@@ -185,8 +183,12 @@ function AddDocument() {
                     pageNumbers.push(currentPage + 2 );
                 }
                 if (currentPage < totalPages - 2) {
-                    pageNumbers.push('...');
                 }
+
+                if (currentPage + 10 <= totalPages) {
+                    pageNumbers.push(currentPage + 10);
+                }
+
                 pageNumbers.push(totalPages);
             } else {
                 for (let page = 2; page <= totalPages; page++) {
@@ -211,25 +213,3 @@ function AddDocument() {
         await updatePage();
     }
     
-
-    function listEM() {
-        $(document).ready(function() {
-        $('table tbody').on('mousedown', 'tr', function(e) {
-            $(this).addClass('highlight').siblings().removeClass('highlight');
-        });
-        $.getJSON('http://127.0.0.1:8080/rest/api/entitymanager', function(json) {
-            console.log(json.data );
-            var tr=[];
-            for (var i = 0; i < json.data.length; i++) {
-                tr.push('<tr>');
-                tr.push('<td>' + json.data[i].idUser + '</td>');
-                tr.push('<td>' + json.data[i].name + '</td>');
-                tr.push('<td>' + json.data[i].login + '</td>');
-                tr.push('<td>' + json.data[i].phone + '</td>');
-                tr.push('<td>' + json.data[i].wallet + '</td>');
-                tr.push('</tr>');
-                }
-                $('table').append($(tr.join('')));
-            });
-        });
-    };

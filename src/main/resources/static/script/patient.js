@@ -155,62 +155,59 @@ async function switchTable() {
     let patientsPerPage = 15;
     let totalPages = Math.ceil(totalPatients / patientsPerPage);
     let currentPage = 1;
-
     $('#currentPage').text(currentPage);
-    updatePageNumbers();
-
-    $(document.getElementById("Previous")).on("click", function () {
-        if (currentPage > 1) {
-            currentPage--;
-            updatePage();
-        }
-    });
-
-    $(document.getElementById("Next")).on("click", function () {
-        if (currentPage < totalPages) {
-            currentPage++;
-            updatePage();
-        }
-    });
-
-    $(document.getElementById("last")).on("click", function () {
-        currentPage = totalPages;
-        updatePage();
-    });
+    updatePageNumbers(); 
 
     function updatePage() {
         $('tbody:even').empty();
-        $('#currentPage').text(currentPage);
         lazyPatients(currentPage, patientsPerPage);
-        updatePageNumbers();
+        $('#currentPage').text(currentPage);
+        updatePageNumbers(); 
     }
 
     function updatePageNumbers() {
-        $('#pageNumbers').empty();
+        $('#pageNumbers').empty(); 
         let pageNumbers = [];
-
-        if (totalPages <= 3) {
-            for (let page = 1; page <= totalPages; page++) {
+        pageNumbers.push(1);
+        //pageNumbers.push('...');
+        
+        if ( currentPage === (totalPages - 1) ){
+            pageNumbers.push( currentPage - 2 );
+        }
+        if (totalPages > 4) {
+            for ( let page = Math.max( 2, currentPage - 1 ); page <= Math.min( currentPage + 1, totalPages - 1 ); page++ ) {
+               if( currentPage === totalPages){
+                    pageNumbers.push( currentPage - 3 );
+                    pageNumbers.push( currentPage - 2 );
+               }
+                pageNumbers.push(page);
+                if( (totalPages - 1) === page ){
+                    //pageNumbers.push('...');
+                }
+                if( currentPage === 1){
+                    pageNumbers.push(currentPage + 2 );
+                    pageNumbers.push(currentPage + 3 );
+                }
+            }
+            if( currentPage === 2){
+                pageNumbers.push(currentPage + 2 );
+            }
+            if (currentPage < totalPages - 2) {
+                //pageNumbers.push('...');
+            }
+            pageNumbers.push(totalPages);
+        } else {
+            for (let page = 2; page <= totalPages; page++) {
                 pageNumbers.push(page);
             }
-        } else {
-            if (currentPage > 2) {
-                pageNumbers.push(1);
-                if (currentPage > 3) pageNumbers.push('...'); 
-            }
-            if (currentPage - 1 > 0) pageNumbers.push(currentPage - 1);
-            pageNumbers.push(currentPage);
-            if (currentPage + 1 <= totalPages) pageNumbers.push(currentPage + 1);
-            if (currentPage < totalPages - 1) {
-                if (currentPage < totalPages - 2) pageNumbers.push('...'); 
-                pageNumbers.push(totalPages);
-            }
         }
+
         for (const page of pageNumbers) {
             $('#pageNumbers').append(
                 `<a class="btn btn-outline-dark page-btn" href="#" data-page="${page}">${page}</a>`
             );
         }
+
         $('.page-btn').on("click", function () {
             let pageNum = $(this).data("page");
             if (pageNum !== "...") {
